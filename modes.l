@@ -1,8 +1,8 @@
 
 /*
- *  Linux/m68k Frame Buffer Device Configuration
+ *  Linux Frame Buffer Device Configuration
  *
- *  © Copyright 1995 by Geert Uytterhoeven
+ *  © Copyright 1995-1998 by Geert Uytterhoeven
  *		       (Geert.Uytterhoeven@cs.kuleuven.ac.be)
  *
  *  --------------------------------------------------------------------------
@@ -34,6 +34,7 @@ static struct keyword keywords[] = {
     { "hsync", HSYNC, 0 },
     { "vsync", VSYNC, 0 },
     { "csync", CSYNC, 0 },
+    { "gsync", GSYNC, 0 },
     { "extsync", EXTSYNC, 0 },
     { "bcast", BCAST, 0 },
     { "laced", LACED, 0 },
@@ -74,7 +75,7 @@ static int FindToken(const char *s)
 }
 
 
-static char *CopyString(const char *s)
+static const char *CopyString(const char *s)
 {
     int len;
     char *s2;
@@ -109,7 +110,7 @@ junk	.
 	    }
 
 {string}    {
-		yylval = (int)CopyString(yytext);
+		yylval = (unsigned long)CopyString(yytext);
 		return(STRING);
 	    }
 

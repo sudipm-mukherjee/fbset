@@ -1,8 +1,10 @@
 This package was debianized by Frank Neumann
 (Frank.Neumann@informatik.uni-oldenburg.de) on Wed, 16 Apr 1997.
 
-It was downloaded from
-ftp://ftp.uni-erlangen.de/pub/Linux/LOCAL/680x0/bin/system/fbset-1.0.tar.gz
+It was downloaded from http://www.cs.kuleuven.ac.be/~geert/bin/fbset*.tar.gz
+
+On Fri, 11 Dec 1998 Hartmut Koptein <koptein@et-inf.fho-emden.de> took
+over maintenance of fbset.
 
 Copyright:
 

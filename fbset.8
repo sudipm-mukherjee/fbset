@@ -1,4 +1,4 @@
-.TH fbset 8 "Aug 1996" local "Linux frame buffer utils"
+.TH fbset 8 "July 1998" local "Linux frame buffer utils"
 .SH NAME
 fbset \- show and modify frame buffer device settings
 .SH SYNOPSIS
@@ -6,33 +6,19 @@ fbset \- show and modify frame buffer device settings
 .RI [ options ]
 .RI [ mode ]
 .SH DESCRIPTION
+.B This documentation is out of date!!
+.PP
 .B fbset
 is a system utility to show or change the settings of the frame buffer
 device. The frame buffer device provides a simple and unique interface to
-access different kinds of graphic displays. But the frame buffer device is
-currently only supported by Linux/m68k and Linux/SPARC.
+access different kinds of graphic displays.
 .PP
 Frame buffer devices are accessed via special device nodes located in the
 /dev directory. The naming scheme for these nodes is always
-.IR \fBfb < n >< mode >,
+.IR \fBfb < n >,
 where
 .I n
-is the number of the used frame buffer device. Unfortunately there is only
-one frame buffer device supported by current kernels, but this will hopefully
-change soon.
-.I mode
-describes different resolutions supported by the device. Special modes are
-.B autodetect
-and
-.BR current ,
-which are describing the mode detected at boot time and the currently used
-mode by the frame buffer device. Other modes may be predefined by the kernel
-but this varies between different machines, but usally there are the modes
-.B user0
-till
-.BR user7 .
-They are not predefined and can be initialized with any valid settings via
-.BR fbset .
+is the number of the used frame buffer device.
 .PP
 .B fbset
 uses an own video mode database located in /etc/fb.modes. An unlimited
@@ -87,7 +73,7 @@ Frame buffer device nodes:
 gives the output frame buffer device node. If no device via
 .B \-ofb
 is given, 
-.I /dev/fb0current
+.I /dev/fb0
 is used
 .TP
 .BR \-ifb "\ <" \fIdevice >
@@ -235,7 +221,7 @@ insert the following in rc.local:
 .sp
 .B fbset
 -ofb
-.I /dev/fb0user0
+.I /dev/fb0
 vga
 .sp
 .RE
@@ -244,7 +230,7 @@ and make the used frame buffer device known to
 .RS
 .sp
 .B export
-.RI FRAMEBUFFER= /dev/fb0user0
+.RI FRAMEBUFFER= /dev/fb0
 .RE
 .SH FILES
 .I /dev/fb*

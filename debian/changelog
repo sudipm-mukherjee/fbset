@@ -1,3 +1,29 @@
+fbset (2.0-2) frozen unstable; urgency=low
+
+  * added generation of /dev/fb? to postinst if this devices doesn't exist
+    fixes: #30810
+
+ -- Hartmut Koptein <koptein@et-inf.fho-emden.de>  Thu, 17 Dec 1998 20:44:53 +0000
+
+ 
+fbset (2.0-1) frozen unstable; urgency=low
+  
+  * Changed the name from fbset2 to fbset
+  * This package replace the old fbset and fbset2 fixes: Bug#29276
+  * New maintainer
+  * New upstream version
+  * Lintian clean
+
+ -- Hartmut Koptein <koptein@et-inf.fho-emden.de>  Fri, 11 Dec 1998 13:09:17 +0000
+
+
+fbset2 (1998.07.13-1) unstable; urgency=low
+
+  * Sort of a new package, and sort of a new upstream release.
+
+ -- Hartmut Koptein <koptein@et-inf.fho-emden.de>  Fri, 23 Oct 1998 18:07:35 +0200
+
+
 fbset (1.0-2) unstable; urgency=low
 
   * Adapted for libc6
@@ -5,6 +31,7 @@ fbset (1.0-2) unstable; urgency=low
     (it never actually created any fb0* nodes in /dev)
 
  -- Frank Neumann <Frank.Neumann@Informatik.Uni-Oldenburg.DE>  Tue, 21 Oct 1997 19:38:56 +0200
+
 
 fbset (1.0-1) unstable; urgency=low
 

@@ -1,7 +1,7 @@
 /*
- *  Linux/m68k Frame Buffer Device Configuration
+ *  Linux Frame Buffer Device Configuration
  *
- *  © Copyright 1995 by Geert Uytterhoeven
+ *  © Copyright 1995-1998 by Geert Uytterhoeven
  *		       (Geert.Uytterhoeven@cs.kuleuven.ac.be)
  *
  *  --------------------------------------------------------------------------
@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "fb.h"
 #include "fbset.h"
 
 extern int yylex(void);
@@ -29,13 +30,14 @@ static struct VideoMode VideoMode;
 static void ClearVideoMode(void)
 {
     memset(&VideoMode, 0, sizeof(VideoMode));
+    VideoMode.accel_flags = FB_ACCELF_TEXT;
 }
 
 %}
 
 %start file
 
-%token MODE GEOMETRY TIMINGS HSYNC VSYNC CSYNC EXTSYNC BCAST LACED DOUBLE
+%token MODE GEOMETRY TIMINGS HSYNC VSYNC CSYNC GSYNC EXTSYNC BCAST LACED DOUBLE
        ENDMODE POLARITY BOOLEAN STRING NUMBER
 
 %%
@@ -50,7 +52,7 @@ vmodes	  : /* empty */
 
 vmode	  : MODE STRING geometry timings options ENDMODE
 	    {
-		VideoMode.name = (char *)$2;
+		VideoMode.name = (const char *)$2;
 		AddVideoMode(&VideoMode);
 		ClearVideoMode();
 	    }
@@ -83,6 +85,7 @@ options	  : /* empty */
 	  | options hsync
 	  | options vsync
 	  | options csync
+      | options gsync
 	  | options extsync
 	  | options bcast
 	  | options laced
@@ -104,6 +107,12 @@ vsync	  : VSYNC POLARITY
 csync	  : CSYNC POLARITY
 	    {
 		VideoMode.csync = $2;
+	    }
+	  ;
+
+gsync	  : GSYNC POLARITY
+	    {
+		VideoMode.gsync = $2;
 	    }
 	  ;
 
