@@ -1,0 +1,21 @@
+This package was debianized by Frank Neumann
+(Frank.Neumann@informatik.uni-oldenburg.de) on Wed, 16 Apr 1997.
+
+It was downloaded from
+ftp://ftp.uni-erlangen.de/pub/Linux/LOCAL/680x0/bin/system/fbset-1.0.tar.gz
+
+Copyright:
+
+/*
+ *  Linux/m68k Frame Buffer Device Configuration
+ *
+ *  (C) Copyright 1995 by Geert Uytterhoeven
+ *                     (Geert.Uytterhoeven@cs.kuleuven.ac.be)
+ *
+ *  --------------------------------------------------------------------------
+ *
+ *  This file is subject to the terms and conditions of the GNU General Public
+ *  License. See the file COPYING in the main directory of the Linux
+ *  distribution for more details.
+ */
+

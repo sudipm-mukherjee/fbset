@@ -2,7 +2,7 @@
 # Linux/m68k Frame Buffer Device Configuration
 #
 
-CC =		gcc -Wall -O3
+CC =		gcc -Wall -O2 -g
 BISON =		bison -d
 FLEX =		flex
 INSTALL =	install

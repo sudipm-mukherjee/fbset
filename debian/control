@@ -1,0 +1,12 @@
+Source: fbset
+Section: admin
+Priority: important
+Maintainer: Frank Neumann <Frank.Neumann@informatik.uni-oldenburg.de>
+Standards-Version: 2.1.2.2
+
+Package: fbset
+Architecture: m68k
+Depends: ${shlibs:Depends}
+Description: Framebuffer device maintenance program (m68k Linux only)
+ This program allows to modify settings for the framebuffer devices
+ on m68k Linux, like depth, virtual resolution, timing parameters etc.

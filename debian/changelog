@@ -1,0 +1,14 @@
+fbset (1.0-2) unstable; urgency=low
+
+  * Adapted for libc6
+  * Changed a pretty stupid bug in postinst which noone discovered so far.
+    (it never actually created any fb0* nodes in /dev)
+
+ -- Frank Neumann <Frank.Neumann@Informatik.Uni-Oldenburg.DE>  Tue, 21 Oct 1997 19:38:56 +0200
+
+fbset (1.0-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Frank Neumann <Frank.Neumann@Informatik.Uni-Oldenburg.DE>  Wed, 16 Apr 1997 18:47:56 +0200
+

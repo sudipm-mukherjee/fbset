@@ -1,0 +1,5 @@
+#!	/bin/sh
+
+# remove any old versions of fbset
+rm -f /sbin/fbset
+exit 0

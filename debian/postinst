@@ -1,0 +1,69 @@
+#!	/bin/sh
+
+# First, create machine-specific /dev nodes for te builtin framebuffer
+# Anyone got a more elegant solution for this?
+
+model=`cat /proc/hardware | grep "^Model:" | cut -c9- | cut -d" " -f1`
+
+if [ $model = "Amiga" ]
+then
+	if [ ! -c /dev/fb0ntsc ]; then mknod /dev/fb0ntsc c 29 2; fi
+	if [ ! -c /dev/fb0ntsc-lace ]; then mknod /dev/fb0ntsc-lace c 29 3; fi
+	if [ ! -c /dev/fb0pal ]; then mknod /dev/fb0pal c 29 4; fi
+	if [ ! -c /dev/fb0pal-lace ]; then mknod /dev/fb0pal-lace c 29 5; fi
+	if [ ! -c /dev/fb0multiscan ]; then mknod /dev/fb0multiscan c 29 6; fi
+	if [ ! -c /dev/fb0multiscan-lace ]; then mknod /dev/fb0multiscan-lace c 29 7; fi
+	if [ ! -c /dev/fb0a2024-10 ]; then mknod /dev/fb0a2024-10 c 29 8; fi
+	if [ ! -c /dev/fb0a2024-15 ]; then mknod /dev/fb0a2024-15 c 29 9; fi
+	if [ ! -c /dev/fb0euro36 ]; then mknod /dev/fb0euro36 c 29 10; fi
+	if [ ! -c /dev/fb0euro36-lace ]; then mknod /dev/fb0euro36-lace c 29 11; fi
+	if [ ! -c /dev/fb0euro72 ]; then mknod /dev/fb0euro72 c 29 12; fi
+	if [ ! -c /dev/fb0euro72-lace ]; then mknod /dev/fb0euro72-lace c 29 13; fi
+	if [ ! -c /dev/fb0super72 ]; then mknod /dev/fb0super72 c 29 14; fi
+	if [ ! -c /dev/fb0super72-lace ]; then mknod /dev/fb0super72-lace c 29 15; fi
+	if [ ! -c /dev/fb0dblntsc ]; then mknod /dev/fb0dblntsc c 29 16; fi
+	if [ ! -c /dev/fb0dblntsc-ff ]; then mknod /dev/fb0dblntsc-ff c 29 17; fi
+	if [ ! -c /dev/fb0dblntsc-lace ]; then mknod /dev/fb0dblntsc-lace c 29 18; fi
+	if [ ! -c /dev/fb0dblpal ]; then mknod /dev/fb0dblpal c 29 19; fi
+	if [ ! -c /dev/fb0dblpal-ff ]; then mknod /dev/fb0dblpal-ff c 29 20; fi
+	if [ ! -c /dev/fb0dblpal-lace ]; then mknod /dev/fb0dblpal-lace c 29 21; fi
+	if [ ! -c /dev/fb0vga ]; then mknod /dev/fb0vga c 29 22; fi
+	if [ ! -c /dev/fb0vga70 ]; then mknod /dev/fb0vga70 c 29 23; fi
+
+# Now, when on Amiga, determine whether to use the PAL or NTSC modes file
+# in the symlink for /etc/fb.modes. We take this from the /proc/hardware
+# as well (PW supply frequency), hoping that 50 Hz are correct for all
+# PAL machines.
+
+	if [ ! -L /etc/fb.modes ]
+    then
+		freq=`cat /proc/hardware | grep "^PS Freq:" | cut -c10-11`
+		if [ freq = "50" ]
+        then
+			ln -sf /etc/fb.modes.PAL /etc/fb.modes
+		else
+			ln -sf /etc/fb.modes.NTSC /etc/fb.modes
+		fi
+	fi
+
+else
+	if [ ! -c /dev/fb0stlow ]; then mknod /dev/fb0stlow c 29 2; fi
+	if [ ! -c /dev/fb0stmid ]; then mknod /dev/fb0stmid c 29 3; fi
+	if [ ! -c /dev/fb0sthigh ]; then mknod /dev/fb0sthigh c 29 4; fi
+	if [ ! -c /dev/fb0ttlow ]; then mknod /dev/fb0ttlow c 29 5; fi
+	if [ ! -c /dev/fb0ttmid ]; then mknod /dev/fb0ttmid c 29 6; fi
+	if [ ! -c /dev/fb0tthigh ]; then mknod /dev/fb0tthigh c 29 7; fi
+	if [ ! -c /dev/fb0vga2 ]; then mknod /dev/fb0vga2 c 29 8; fi
+	if [ ! -c /dev/fb0vga4 ]; then mknod /dev/fb0vga4 c 29 9; fi
+	if [ ! -c /dev/fb0vga16 ]; then mknod /dev/fb0vga16 c 29 10; fi
+	if [ ! -c /dev/fb0vga256 ]; then mknod /dev/fb0vga256 c 29 11; fi
+	if [ ! -c /dev/fb0falh2 ]; then mknod /dev/fb0falh2 c 29 12; fi
+	if [ ! -c /dev/fb0falh16 ]; then mknod /dev/fb0falh16 c 29 13; fi
+
+	if [ ! -L /etc/fb.modes ]
+    then
+		ln -sf /etc/fb.modes.Falcon /etc/fb.modes
+	fi
+fi
+
+exit 0
