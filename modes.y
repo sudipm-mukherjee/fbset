@@ -14,7 +14,10 @@
 
 %{
 
+#define YYSTYPE		long
+
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "fb.h"
@@ -38,7 +41,8 @@ static void ClearVideoMode(void)
 %start file
 
 %token MODE GEOMETRY TIMINGS HSYNC VSYNC CSYNC GSYNC EXTSYNC BCAST LACED DOUBLE
-       ENDMODE POLARITY BOOLEAN STRING NUMBER
+       RGBA NONSTD ACCEL GRAYSCALE
+       ENDMODE POLARITY BOOLEAN STRING NUMBER 
 
 %%
 
@@ -85,11 +89,15 @@ options	  : /* empty */
 	  | options hsync
 	  | options vsync
 	  | options csync
-      | options gsync
+	  | options gsync
 	  | options extsync
 	  | options bcast
 	  | options laced
 	  | options double
+	  | options rgba
+	  | options nonstd
+	  | options accel
+	  | options grayscale
 	  ;
 
 hsync	  : HSYNC POLARITY
@@ -140,4 +148,28 @@ double	  : DOUBLE BOOLEAN
 	    }
 	  ;
 
+rgba      : RGBA STRING
+            {
+		makeRGBA(&VideoMode, (const char*)$2);
+	    }
+	  ;
+
+nonstd    : NONSTD NUMBER
+            {
+	    	VideoMode.nonstd = $2;
+	    }
+	  ;
+
+accel	  : ACCEL BOOLEAN
+	    {
+		VideoMode.accel_flags = $2;
+	    }
+	  ;
+
+grayscale : GRAYSCALE BOOLEAN
+	    {
+		VideoMode.grayscale = $2;
+	    }
+	  ;
+	  
 %%

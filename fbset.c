@@ -1,7 +1,7 @@
 /*
  *  Linux Frame Buffer Device Configuration
  *
- *  © Copyright 1995-1998 by Geert Uytterhoeven
+ *  © Copyright 1995-1999 by Geert Uytterhoeven
  *		       (Geert.Uytterhoeven@cs.kuleuven.ac.be)
  *
  *  --------------------------------------------------------------------------
@@ -9,6 +9,13 @@
  *  This file is subject to the terms and conditions of the GNU General Public
  *  License. See the file COPYING in the main directory of the Linux
  *  distribution for more details.
+ *
+ *  Petr Vandrovec <vandrove@vc.cvut.cz>:
+ *           -grayscale, -rgba, -nonstd, VGA modes reporting
+ *
+ *  Brad Midgley <brad@exodus.pht.com>:
+ *           -match
+ *
  */
 
 
@@ -19,6 +26,8 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <sys/ioctl.h>
+#include <ctype.h>
+#include <sys/stat.h>
 
 struct file;
 struct inode;
@@ -83,37 +92,45 @@ static const char *Opt_double = NULL;
 static const char *Opt_move = NULL;
 static const char *Opt_step = NULL;
 static const char *Opt_modename = NULL;
+static const char *Opt_rgba = NULL;
+static const char *Opt_nonstd = NULL;
+static const char *Opt_grayscale = NULL;
+static const char *Opt_matchyres = NULL;
 
 static struct {
     const char *name;
     const char **value;
+    const int change;
 } Options[] = {
-    { "-fb", &Opt_fb },
-    { "-db", &Opt_modedb },
-    { "-xres", &Opt_xres },
-    { "-yres", &Opt_yres },
-    { "-vxres", &Opt_vxres },
-    { "-vyres", &Opt_vyres },
-    { "-depth", &Opt_depth },
-    { "-pixclock", &Opt_pixclock },
-    { "-left", &Opt_left },
-    { "-right", &Opt_right },
-    { "-upper", &Opt_upper },
-    { "-lower", &Opt_lower },
-    { "-hslen", &Opt_hslen },
-    { "-vslen", &Opt_vslen },
-    { "-accel", &Opt_accel },
-    { "-hsync", &Opt_hsync },
-    { "-vsync", &Opt_vsync },
-    { "-csync", &Opt_csync },
-    { "-gsync", &Opt_gsync },
-    { "-extsync", &Opt_extsync },
-    { "-bcast", &Opt_bcast },
-    { "-laced", &Opt_laced },
-    { "-double", &Opt_double },
-    { "-move", &Opt_move },
-    { "-step", &Opt_step },
-    { NULL, NULL }
+    { "-fb", &Opt_fb, 0 },
+    { "-db", &Opt_modedb, 0 },
+    { "-xres", &Opt_xres, 1 },
+    { "-yres", &Opt_yres, 1 },
+    { "-vxres", &Opt_vxres, 1 },
+    { "-vyres", &Opt_vyres, 1 },
+    { "-depth", &Opt_depth, 1 },
+    { "-nonstd", &Opt_nonstd, 1},
+    { "-pixclock", &Opt_pixclock, 1 },
+    { "-left", &Opt_left, 1 },
+    { "-right", &Opt_right, 1 },
+    { "-upper", &Opt_upper, 1 },
+    { "-lower", &Opt_lower, 1 },
+    { "-hslen", &Opt_hslen, 1 },
+    { "-vslen", &Opt_vslen, 1 },
+    { "-accel", &Opt_accel, 1 },
+    { "-hsync", &Opt_hsync, 1 },
+    { "-vsync", &Opt_vsync, 1 },
+    { "-csync", &Opt_csync, 1 },
+    { "-gsync", &Opt_gsync, 1 },
+    { "-extsync", &Opt_extsync, 1 },
+    { "-bcast", &Opt_bcast, 1 },
+    { "-laced", &Opt_laced, 1 },
+    { "-double", &Opt_double, 1 },
+    { "-move", &Opt_move, 1 },
+    { "-step", &Opt_step, 1 },
+    { "-rgba", &Opt_rgba, 1 },
+    { "-grayscale", &Opt_grayscale, 1 },
+    { NULL, NULL, 0 }
 };
 
 
@@ -123,6 +140,29 @@ static struct {
 
 struct VideoMode *VideoModes = NULL;
 
+
+    /*
+     *  Hardware Text Modes
+     */
+
+static struct textentry {
+    __u32 id;
+    const char *name;
+} Textmodes[] = {
+    { FB_AUX_TEXT_MDA, "Monochrome text" },
+    { FB_AUX_TEXT_CGA, "CGA/EGA/VGA Color text" },
+    { FB_AUX_TEXT_S3_MMIO, "S3 MMIO fasttext" },
+    { FB_AUX_TEXT_MGA_STEP16, "MGA Millennium I step 16 text" },
+    { FB_AUX_TEXT_MGA_STEP8, "MGA step 8 text" },
+};
+
+static struct textentry VGAModes[] = {
+    { FB_AUX_VGA_PLANES_VGA4, "VGA 16 colors in 4 planes" },
+    { FB_AUX_VGA_PLANES_CFB4, "VGA 16 colors in 1 plane" },
+    { FB_AUX_VGA_PLANES_CFB8, "VGA 256 colors in 4 planes" },
+    /* last entry has name == NULL */
+    { 0,                      NULL}
+};
 
     /*
      *  Hardware Accelerators
@@ -154,6 +194,11 @@ static struct accelentry {
     { FB_ACCEL_MATROX_MGA2164W_AGP, "Matrox MGA2164W (Millennium II AGP)" },
     { FB_ACCEL_MATROX_MGAG100, "Matrox G100 (Productiva G100)" },
     { FB_ACCEL_MATROX_MGAG200, "Matrox G200 (Millennium, Mystique)" },
+    { FB_ACCEL_SUN_CG14, "Sun cg14" },
+    { FB_ACCEL_SUN_BWTWO, "Sun bw2" },
+    { FB_ACCEL_SUN_CGTHREE, "Sun cg3" },
+    { FB_ACCEL_SUN_TCX, "Sun tcx" },
+    { FB_ACCEL_MATROX_MGAG400, "Matrox G400" },
 };
 
 
@@ -230,7 +275,6 @@ void CloseFrameBuffer(int fh)
     close(fh);
 }
 
-
     /*
      *  Get the Variable Part of the Screen Info
      */
@@ -277,6 +321,7 @@ static void ConvertFromVideoMode(const struct VideoMode *vmode,
     var->xres_virtual = vmode->vxres;
     var->yres_virtual = vmode->vyres;
     var->bits_per_pixel = vmode->depth;
+    var->nonstd = vmode->nonstd;
     if (Opt_test)
 	var->activate = FB_ACTIVATE_TEST;
     else
@@ -310,6 +355,15 @@ static void ConvertFromVideoMode(const struct VideoMode *vmode,
     else
 	var->vmode = FB_VMODE_NONINTERLACED;
     var->vmode |= FB_VMODE_CONUPDATE;
+    var->red.length = vmode->red.length;
+    var->red.offset = vmode->red.offset;
+    var->green.length = vmode->green.length;
+    var->green.offset = vmode->green.offset;
+    var->blue.length = vmode->blue.length;
+    var->blue.offset = vmode->blue.offset;
+    var->transp.length = vmode->transp.length;
+    var->transp.offset = vmode->transp.offset;
+    var->grayscale = vmode->grayscale;
 }
 
 
@@ -322,6 +376,8 @@ static void ConvertToVideoMode(const struct fb_var_screeninfo *var,
     vmode->vxres = var->xres_virtual;
     vmode->vyres = var->yres_virtual;
     vmode->depth = var->bits_per_pixel;
+    vmode->nonstd = var->nonstd;
+    vmode->accel_flags = var->accel_flags;
     vmode->pixclock = var->pixclock;
     vmode->left = var->left_margin;
     vmode->right = var->right_margin;
@@ -335,6 +391,7 @@ static void ConvertToVideoMode(const struct fb_var_screeninfo *var,
     vmode->gsync = var->sync & FB_SYNC_ON_GREEN ? TRUE : FALSE;
     vmode->extsync = var->sync & FB_SYNC_EXT ? TRUE : FALSE;
     vmode->bcast = var->sync & FB_SYNC_BROADCAST ? TRUE : FALSE;
+    vmode->grayscale = var->grayscale;
     vmode->laced = FALSE;
     vmode->dblscan = FALSE;
     switch (var->vmode & FB_VMODE_MASK) {
@@ -345,6 +402,14 @@ static void ConvertToVideoMode(const struct fb_var_screeninfo *var,
 	    vmode->dblscan = TRUE;
 	    break;
     }
+    vmode->red.length = var->red.length;
+    vmode->red.offset = var->red.offset;
+    vmode->green.length = var->green.length;
+    vmode->green.offset = var->green.offset;
+    vmode->blue.length = var->blue.length;
+    vmode->blue.offset = var->blue.offset;
+    vmode->transp.length = var->transp.length;
+    vmode->transp.offset = var->transp.offset;
     FillScanRates(vmode);
 }
 
@@ -400,6 +465,40 @@ static void ReadModeDB(void)
 }
 
 
+static void getColor(struct color *color, const char** opt)
+{
+    char* ptr;
+
+    color->length = 0;
+    color->offset = 0;
+    ptr = (char*)(*opt);
+    if (!ptr)
+	return;
+    color->length = strtoul(ptr, &ptr, 0);
+    if (!ptr)
+	return;
+    if (*ptr == '/')
+	color->offset = strtoul(ptr+1, &ptr, 0);
+    if (ptr) {
+	while (*ptr && isspace(*ptr))
+	    ptr++;
+	if (*ptr == ',') {
+	    ptr++;
+	} else if (*ptr)
+	    Die("Bad RGBA syntax, rL/rO,gL/gO,bL/bO,tL/tO or rL,gL,bL,tL\n");
+    }
+    *opt = ptr;
+    return;
+}
+
+void makeRGBA(struct VideoMode *vmode, const char* opt)
+{
+    getColor(&vmode->red, &opt);
+    getColor(&vmode->green, &opt);
+    getColor(&vmode->blue, &opt);
+    getColor(&vmode->transp, &opt);
+}
+
     /*
      *  Find a Video Mode
      */
@@ -434,6 +533,8 @@ static void ModifyVideoMode(struct VideoMode *vmode)
 	vmode->vyres = strtoul(Opt_vyres, NULL, 0);
     if (Opt_depth)
 	vmode->depth = strtoul(Opt_depth, NULL, 0);
+    if (Opt_nonstd)
+	vmode->nonstd = strtoul(Opt_nonstd, NULL, 0);
     if (Opt_accel)
 	vmode->accel_flags = atoboolean(Opt_accel) ? FB_ACCELF_TEXT : 0;
     if (Opt_pixclock)
@@ -466,9 +567,13 @@ static void ModifyVideoMode(struct VideoMode *vmode)
 	vmode->laced = atoboolean(Opt_laced);
     if (Opt_double)
 	vmode->dblscan = atoboolean(Opt_double);
+    if (Opt_grayscale)
+	vmode->grayscale = atoboolean(Opt_grayscale);
     if (Opt_step)
 	hstep = vstep = strtoul(Opt_step, NULL, 0);
-    if (Opt_move)
+    if (Opt_matchyres)
+        vmode->vyres = vmode->yres;
+    if (Opt_move) {
 	if (!strcasecmp(Opt_move, "left")) {
 	    if (hstep > vmode->left)
 		Die("The left margin cannot be negative\n");
@@ -491,6 +596,10 @@ static void ModifyVideoMode(struct VideoMode *vmode)
 	    vmode->lower -= vstep;
 	} else
 	    Die("Invalid direction `%s'\n", Opt_move);
+    }
+    if (Opt_rgba) {
+	makeRGBA(vmode, Opt_rgba);
+    }
     if (!FillScanRates(vmode))
 	Die("Bad video mode\n");
 }
@@ -506,10 +615,13 @@ static void DisplayVModeInfo(struct VideoMode *vmode)
 
     puts("");
     if (!Opt_xfree86) {
-	puts("mode \"name\"");
-	if (vmode->pixclock)
+	printf("mode \"%dx%d", vmode->xres, vmode->yres);
+	if (vmode->pixclock) {
+	    printf("-%d\"\n", (int)(vmode->vrate+0.5));
 	    printf("    # D: %5.3f MHz, H: %5.3f kHz, V: %5.3f Hz\n",
 		   vmode->drate/1E6, vmode->hrate/1E3, vmode->vrate);
+	} else
+	    puts("\"");
 	printf("    geometry %d %d %d %d %d\n", vmode->xres, vmode->yres,
 	       vmode->vxres, vmode->vyres, vmode->depth);
 	printf("    timings %d %d %d %d %d %d %d\n", vmode->pixclock,
@@ -531,9 +643,19 @@ static void DisplayVModeInfo(struct VideoMode *vmode)
 	    puts("    laced true");
 	if (vmode->dblscan)
 	    puts("    double true");
+	if (vmode->nonstd)
+            printf("    nonstd %u\n", vmode->nonstd);
+	if (vmode->accel_flags)
+	    puts("    accel true");
+	if (vmode->grayscale)
+	    puts("    grayscale true");
+	printf("    rgba %u/%u,%u/%u,%u/%u,%u/%u\n",
+	    vmode->red.length, vmode->red.offset, vmode->green.length,
+	    vmode->green.offset, vmode->blue.length, vmode->blue.offset,
+	    vmode->transp.length, vmode->transp.offset);
 	puts("endmode\n");
     } else {
-	puts("Mode \"name\"");
+	printf("Mode \"%dx%d\"\n", vmode->xres, vmode->yres);
 	if (vmode->pixclock) {
 	    printf("    # D: %5.3f MHz, H: %5.3f kHz, V: %5.3f Hz\n",
 		   vmode->drate/1E6, vmode->hrate/1E3, vmode->vrate);
@@ -569,6 +691,10 @@ static void DisplayVModeInfo(struct VideoMode *vmode)
 	    puts("    # Warning: XFree86 doesn't support extsync\n");
 	if (vmode->bcast)
 	    printf(" \"bcast\"");
+	if (vmode->accel_flags)
+	    puts("    # Warning: XFree86 doesn't support accel\n");
+	if (vmode->grayscale)
+	    puts("    # Warning: XFree86 doesn't support grayscale\n");
 	puts("\nEndMode\n");
     }
 }
@@ -583,7 +709,7 @@ static void DisplayFBInfo(struct fb_fix_screeninfo *fix)
     int i;
 
     puts("Frame buffer device information:");
-    printf("    Name        : `%s'\n", fix->id);
+    printf("    Name        : %s\n", fix->id);
     printf("    Address     : %p\n", fix->smem_start);
     printf("    Size        : %d\n", fix->smem_len);
     printf("    Type        : ");
@@ -599,19 +725,25 @@ static void DisplayFBInfo(struct fb_fix_screeninfo *fix)
 		   fix->type_aux);
 	    break;
 	case FB_TYPE_TEXT:
-	    switch (fix->type_aux) {
-		case FB_AUX_TEXT_MDA:
-		    puts("Monochrome text");
+	    for (i = 0; i < sizeof(Textmodes)/sizeof(*Textmodes); i++)
+		if (fix->type_aux == Textmodes[i].id)
 		    break;
-		case FB_AUX_TEXT_CGA:
-		    puts("CGA/EGA/VGA Color text");
-		    break;
-		case FB_AUX_TEXT_S3_MMIO:
-		    puts("S3 MMIO fasttext");
-		    break;
-		default:
-		    printf("%d (UNKNOWN) text\n", fix->type_aux);
-		    break;
+	    if (i < sizeof(Textmodes)/sizeof(*Textmodes))
+		puts(Textmodes[i].name);
+	    else
+		printf("Unknown text (%d)\n", fix->type_aux);
+	    break;
+	case FB_TYPE_VGA_PLANES:
+	    {
+	    	struct textentry *t;
+		
+		for (t = VGAModes; t->name; t++)
+		    if (fix->type_aux == t->id)
+		    	break;
+		if (t->name)
+		    puts(t->name);
+		else
+	            printf("Unknown VGA mode (%d)\n", fix->type_aux);
 	    }
 	    break;
 	default:
@@ -724,7 +856,9 @@ static void Usage(void)
 	"    -vxres <value>     : virtual horizontal resolution (in pixels)\n"
 	"    -vyres <value>     : virtual vertical resolution (in pixels)\n"
 	"    -depth <value>     : display depth (in bits per pixel)\n"
+	"    -nonstd <value>    : select nonstandard video mode\n"
 	"    -g, --geometry ... : set all geometry parameters at once\n"
+	"    -match             : set virtual vertical resolution by virtual resolution\n"
 	"  Display timings:\n"
 	"    -pixclock <value>  : pixel clock (in picoseconds)\n"
 	"    -left <value>      : left margin (in pixels)\n"
@@ -745,6 +879,8 @@ static void Usage(void)
 	"    -bcast <value>     : broadcast enable (false or true)\n"
 	"    -laced <value>     : interlace enable (false or true)\n"
 	"    -double <value>    : doublescan enable (false or true)\n"
+	"    -rgba <r,g,b,a>    : recommended length of color entries\n"
+	"    -grayscale <value> : grayscale enable (false or true)\n"
 	"  Display positioning:\n"
 	"    -move <direction>  : move the visible part (left, right, up or "
 				 "down)\n"
@@ -790,7 +926,7 @@ int main(int argc, char *argv[])
 	    Opt_xfree86 = 1;
 	else if (!strcmp(argv[0], "-a") || !strcmp(argv[0], "--all"))
 	    Opt_all = 1;
-	else if (!strcmp(argv[0], "-g") || !strcmp(argv[0], "--geometry"))
+	else if (!strcmp(argv[0], "-g") || !strcmp(argv[0], "--geometry")) {
 	    if (argc > 5) {
 		Opt_xres = argv[1];
 		Opt_yres = argv[2];
@@ -802,7 +938,7 @@ int main(int argc, char *argv[])
 		argv += 5;
 	    } else
 		Usage();
-	else if (!strcmp(argv[0], "-t") || !strcmp(argv[0], "--timings"))
+	} else if (!strcmp(argv[0], "-t") || !strcmp(argv[0], "--timings")) {
 	    if (argc > 7) {
 		Opt_pixclock = argv[1];
 		Opt_left = argv[2];
@@ -816,18 +952,21 @@ int main(int argc, char *argv[])
 		argv += 7;
 	    } else
 		Usage();
-	else {
+	} else if (!strcmp(argv[0], "-match")) {
+	    Opt_matchyres = argv[0];
+	    Opt_change = 1;
+	} else {
 	    for (i = 0; Options[i].name; i++)
 		if (!strcmp(argv[0], Options[i].name))
 		    break;
-	    if (Options[i].name)
+	    if (Options[i].name) {
 		if (argc-- > 1) {
 		    *Options[i].value = argv[1];
-		    Opt_change = 1;
+		    Opt_change |= Options[i].change;
 		    argv++;
 		} else
 		    Usage();
-	    else if (!Opt_modename) {
+	    } else if (!Opt_modename) {
 		Opt_modename = argv[0];
 		Opt_change = 1;
 	    } else

@@ -1,8 +1,9 @@
 Source: fbset
 Section: admin
 Priority: important
-Maintainer: Hartmut Koptein <koptein@et-inf.fho-emden.de>
-Standards-Version: 2.4.1.0
+Maintainer: Hartmut Koptein <koptein@debian.org>
+Standards-Version: 3.0.1.1
+Build-Depends: flex, bison, debhelper
 
 Package: fbset
 Architecture: any
@@ -13,3 +14,4 @@ Description: Framebuffer device maintenance program.
  .
  This program is useful for all Linux/m68k kernel versions, and
  for late 2.1 kernels on most other architectures.
+

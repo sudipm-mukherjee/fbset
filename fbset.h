@@ -20,8 +20,8 @@
 #endif
 
 #define VERSION         "Linux Frame Buffer Device Configuration " \
-			"Version 2.0-pre (28/10/1998)\n"  \
-			"(C) Copyright 1995-1998 by Geert Uytterhoeven\n"
+			"Version 2.1 (23/06/1999)\n"  \
+			"(C) Copyright 1995-1999 by Geert Uytterhoeven\n"
 
 #define LOW		(0)
 #define HIGH		(1)
@@ -29,6 +29,10 @@
 #define FALSE		(0)
 #define TRUE		(1)
 
+struct color {
+    unsigned int length;
+    unsigned int offset;
+};
 
 struct VideoMode {
     struct VideoMode *next;
@@ -39,6 +43,7 @@ struct VideoMode {
     __u32 vxres;
     __u32 vyres;
     __u32 depth;
+    __u32 nonstd;
     /* acceleration */
     __u32 accel_flags;
     /* timings */
@@ -58,10 +63,13 @@ struct VideoMode {
     unsigned bcast : 1;
     unsigned laced : 1;
     unsigned dblscan : 1;
+    unsigned grayscale : 1;
     /* scanrates */
     double drate;
     double hrate;
     double vrate;
+    /* RGB entries */
+    struct color red, green, blue, transp;
 };
 
 extern FILE *yyin;
@@ -71,4 +79,4 @@ extern const char *Opt_modedb;
 extern int yyparse(void);
 extern void Die(const char *fmt, ...) __attribute__ ((noreturn));
 extern void AddVideoMode(const struct VideoMode *vmode);
-
+extern void makeRGBA(struct VideoMode *vmode, const char* opt);

@@ -1,8 +1,9 @@
 #!/usr/bin/make -f
-#                                          -*- makefile -*-
+#                                              -*- makefile -*-
 # debian/rules file for the Debian/GNU Linux fbset package
-# Copyright 1998 by   Hartmut Koptein <koptein@debian.org>
+# Copyright 1998, 1999 by  Hartmut Koptein <koptein@debian.org>
 
+export DH_COMPAT=2
 #export DH_VERBOSE=1
 
 package = fbset
@@ -10,14 +11,15 @@ package = fbset
 build: build-stamp
 build-stamp:
 	dh_testdir
-	make CFLAGS="-O2 -g -Wall"
+	dh_testversion 2
+	$(MAKE) CFLAGS="-g"
 	touch build-stamp
 
 clean:
 	dh_testdir
 	dh_testroot
-	rm -f build-stamp
-	make clean
+	-rm -f build-stamp
+	-$(MAKE) clean
 	dh_clean
 
 binary-indep:	build
@@ -26,13 +28,17 @@ binary-arch:	build
 	dh_testdir
 	dh_testroot
 	dh_clean -k
-	dh_installdirs usr/sbin
-	dh_installdocs GetVideoMode.c
+	dh_installdirs etc usr/sbin
+	install -m 755 fbset debian/$(package)/usr/sbin
+	install -m 755 modeline2fb debian/$(package)/usr/sbin
+	install -m 755 con2fbmap debian/$(package)/usr/sbin
+	install -m 644 etc/fb.modes.ATI debian/$(package)/etc/fb.modes
+	dh_installexamples etc/fb.modes.* 
+	dh_installdocs GetVideoMode.c FAQ kernel-doc
 	dh_installchangelogs
-	dh_installmanpages
-	install -m 755 fbset debian/tmp/usr/sbin
-	dh_installexamples etc/fb.modes.*
-	dh_strip
+	dh_installmanpages   
+	dh_undocumented      modeline2fb.8 
+	dh_strip -v
 	dh_compress
 	dh_fixperms
 	dh_shlibdeps

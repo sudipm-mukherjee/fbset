@@ -1,8 +1,12 @@
 #!/bin/sh -
+#
+# Post-Installation script
 
 set -e
 
+#
 # make sure /dev/fb*  exists
+#
 if ! test -c /dev/fb0
 then
 	cd /dev 
@@ -14,3 +18,12 @@ fi
 # then 
 #	update-menus  
 # fi
+
+#
+# FHS sym-link for /usr/doc -> /usr/share/doc
+#
+if [ "$1" = "configure" ]; then
+	if [ -d /usr/doc -a ! -e /usr/doc/fbset -a -d /usr/share/doc/fbset ]; then
+		ln -sf ../share/doc/fbset /usr/doc/fbset
+	fi
+fi
