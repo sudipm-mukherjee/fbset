@@ -5,23 +5,50 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-# This is the debhelper compatibility version to use.
-export DH_COMPAT=3
+CFLAGS = -Wall -g
+UDEB_CFLAGS = -Wall -g
+
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+	CFLAGS += -O0
+	UDEB_CFLAGS += -O0
+else
+	CFLAGS += -O2
+	UDEB_CFLAGS += -Os -fomit-frame-pointer
+endif
+
+PACKAGE = fbset
+UDEB_PACKAGE = $(PACKAGE)-udeb
+
+include debian/patch.mk
+
+debian/po/templates.pot: debian/fbset.templates
+	@debconf-updatepo
 
 build: build-stamp
-build-stamp:
+build-stamp: patch debian/po/templates.pot
 	dh_testdir
 
-	$(MAKE)
+	rm -f build-stamp*
+	$(MAKE) clean
+	$(MAKE) CFLAGS="$(CFLAGS)"
 
-	touch build-stamp
+	touch $@
 
-clean:
+build-udeb: build-stamp-udeb
+build-stamp-udeb: patch
+	dh_testdir
+
+	rm -f build-stamp*
+	$(MAKE) clean
+	$(MAKE) CFLAGS="$(UDEB_CFLAGS)"
+
+	touch $@
+
+clean::
 	dh_testdir
 	dh_testroot
-	rm -f build-stamp
+	rm -f build-stamp*
 
-	# Add here commands to clean up after the build process.
 	-$(MAKE) clean
 
 	dh_clean
@@ -30,47 +57,62 @@ install: build
 	dh_testdir
 	dh_testroot
 	dh_clean -k
-	dh_installdirs etc usr/sbin usr/share/man/man5 usr/share/man/man8
-	install -m 755 fbset debian/fbset/usr/sbin
-	install -m 755 modeline2fb debian/fbset/usr/sbin
-	install -m 755 con2fbmap debian/fbset/usr/sbin
-	install -m 644 etc/fb.modes.ATI debian/fbset/etc/fb.modes
-	install -m 644 *.8 debian/fbset/usr/share/man/man8
-	install -m 644 *.5 debian/fbset/usr/share/man/man5
+	dh_installdirs
+
+	-$(MAKE) install DESTDIR=$(CURDIR)/debian/$(PACKAGE)
+
+install-udeb: build-udeb
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+
+	-$(MAKE) install DESTDIR=$(CURDIR)/debian/$(UDEB_PACKAGE)
+	rm -rf $(CURDIR)/debian/$(UDEB_PACKAGE)/usr/share
 
 # Build architecture-independent files here.
 binary-indep: build install
-# We have nothing to do by default.
+# Nothing to do.
 
 # Build architecture-dependent files here.
-binary-arch: build install
+binary-arch: fbset fbset-udeb
+
+fbset: install
 	dh_testdir
 	dh_testroot
-	dh_installdebconf	
-	dh_installdocs GetVideoMode.c FAQ kernel-doc
-	dh_installexamples etc/fb.modes.*
-	dh_installmenu
-#	dh_installlogrotate
-#	dh_installemacsen
+	dh_installdebconf	-p$@
+	dh_installdocs		-p$@
+	dh_installexamples	-p$@
 #	dh_installpam
 #	dh_installmime
 #	dh_installinit
 #	dh_installcron
-	dh_installman con2fbmap.8 fb.modes.5 fbset.8 debian/modeline2fb.8
-	dh_installinfo
-#	dh_undocumented
-	dh_installchangelogs
-	dh_link
-	dh_strip 
-	dh_compress
-	dh_fixperms
+	dh_installman		-p$@
+#	dh_installinfo
+	dh_installchangelogs	-p$@
+	dh_link			-p$@
+	dh_strip		-p$@
+	dh_compress		-p$@
+	dh_fixperms		-p$@
 #	dh_makeshlibs
-	dh_installdeb
+	dh_installdeb		-p$@
 #	dh_perl
-	dh_shlibdeps
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
+	dh_shlibdeps		-p$@
+	dh_gencontrol		-p$@
+	dh_md5sums		-p$@
+	dh_builddeb		-p$@
+
+fbset-udeb: install-udeb
+	dh_testdir
+	dh_testroot
+	dh_installdirs		-p$@
+	dh_strip		-p$@
+	dh_compress		-p$@
+	dh_fixperms		-p$@
+	dh_installdeb		-p$@
+	dh_shlibdeps		-p$@
+	dh_gencontrol		-p$@
+	dh_builddeb		-p$@
 
 binary: binary-indep binary-arch
 .PHONY: build clean binary-indep binary-arch binary install

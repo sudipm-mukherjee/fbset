@@ -1,8 +1,8 @@
 			The Frame Buffer Device
 			-----------------------
 
-Maintained by Geert Uytterhoeven (Geert.Uytterhoeven@cs.kuleuven.ac.be)
-Last revised: November 7, 1998
+Maintained by Geert Uytterhoeven <geert@linux-m68k.org>
+Last revised: May 10, 2001
 
 
 0. Introduction
@@ -29,9 +29,9 @@ By convention, the following device nodes are used (numbers indicate the device
 minor numbers):
 
       0 = /dev/fb0	First frame buffer
-     32 = /dev/fb1	Second frame buffer
+      1 = /dev/fb1	Second frame buffer
 	  ...
-    224 = /dev/fb7	8th frame buffer
+     31 = /dev/fb31	32nd frame buffer
 
 For backwards compatibility, you may want to create the following symbolic
 links:
@@ -190,7 +190,7 @@ We'll say that the horizontal scanrate is about 31 kHz:
     1/(32.141E-6 s) = 31.113E3 Hz
 
 A full screen counts 480 (yres) lines, but we have to consider the vertical
-retrace too (e.g. 49 `pixels'). So a full screen will take
+retrace too (e.g. 49 `lines'). So a full screen will take
 
     (480+49)*32.141E-6 s = 17.002E-3 s
 
@@ -294,7 +294,11 @@ under "xc/programs/Xserver/hw/xfree86/doc/modeDB.txt".
 -------------
 
 For more specific information about the frame buffer device and its
-applications, please refer to the following documentation:
+applications, please refer to the Linux-fbdev website:
+
+    http://linux-fbdev.sourceforge.net/
+
+and to the following documentation:
 
   - The manual pages for fbset: fbset(8), fb.modes(5)
   - The manual pages for XFree86: XF68_FBDev(1), XF86Config(4/5)
@@ -304,7 +308,20 @@ applications, please refer to the following documentation:
       o linux/include/video/
 
 
-8. Downloading
+
+8. Mailing list
+---------------
+
+There are several frame buffer device related mailing lists at SourceForge:
+  - linux-fbdev-announce@lists.sourceforge.net, for announcements,
+  - linux-fbdev-user@lists.sourceforge.net, for generic user support,
+  - linux-fbdev-devel@lists.sourceforge.net, for project developers.
+
+Point your web browser to http://sourceforge.net/projects/linux-fbdev/ for
+subscription information and archive browsing.
+
+
+9. Downloading
 --------------
 
 All necessary files can be found at
@@ -313,8 +330,12 @@ All necessary files can be found at
 
 and on its mirrors.
 
+The latest version of fbset can be found at
+
+    http://home.tvd.be/cr26864/Linux/fbdev/
+
   
-9. Credits                                                       
+10. Credits                                                       
 ----------                                                       
                 
 This readme was written by Geert Uytterhoeven, partly based on the original

@@ -1,7 +1,0 @@
-Template: fbset/create_framebuffer_devices
-Type: boolean
-Default: true
-Description: Do you want to create framebuffer devices?
- fbset needs framebuffer devices in order to function correctly. These
- will be created as /dev/fb[0-7], with the appropriate permissions.
- May I create these character devices?

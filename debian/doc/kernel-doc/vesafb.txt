@@ -62,7 +62,7 @@ So the table for the Kernel mode numbers are:
 16M |  0x312    0x315    0x318    0x31B   
 
 To enable one of those modes you have to specify "vga=ask" in the
-lilo.conf file and rerun LILO. Then you can type in the descired
+lilo.conf file and rerun LILO. Then you can type in the desired
 mode at the "vga=ask" prompt. For example if you like to use 
 1024x768x256 colors you have to say "305" at this prompt.
 
@@ -112,9 +112,9 @@ to pan the display.  It is turned off by default because it
 seems not to work with some BIOS versions, but there are options
 to turn it on.
 
-You can pass options to vesafb using "video=vesa:option" on
+You can pass options to vesafb using "video=vesafb:option" on
 the kernel command line.  Multiple options should be separated
-by comma, like this: "video=vesa:ypan,invers"
+by comma, like this: "video=vesafb:ypan,invers"
 
 Accepted options:
 
@@ -146,6 +146,15 @@ pmipal	Use the protected mode interface for palette changes.
 
 mtrr	setup memory type range registers for the vesafb framebuffer.
 
+vremap:n
+        remap 'n' MiB of video RAM. If 0 or not specified, remap memory
+	according to video mode. (2.5.66 patch/idea by Antonino Daplas
+	reversed to give override possibility (allocate more fb memory
+	than the kernel would) to 2.4 by tmb@iki.fi)
+
+vtotal:n
+        if the video BIOS of your card incorrectly determines the total
+        amount of video RAM, use this option to override the BIOS (in MiB).
 
 Have fun!
 
