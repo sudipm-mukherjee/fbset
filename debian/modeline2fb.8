@@ -1,0 +1,40 @@
+.TH MODELINE2FB 8
+.SH NAME
+modeline2fb \- simple modeline to fb.modes translator
+.SH SYNOPSIS
+.B modeline2fb
+[\fIOPTION\fR] [\fIFILES\fR]
+.SH DESCRIPTION
+.PP
+.I Modeline2fb
+is a simple Perl script that converts XF86Config-style modelines to options
+suitable for a fb.modes file.
+.PP
+Note that only one option can be successfully enabled at any particular time.
+.SH OPTIONS
+.TP
+\fB\-d\fR, \fB\-\-depth\fR \fIdepth\fR
+Use the given display depth (default is 8).
+.TP
+\fB\-h\fR \fB\-\-help\fR
+Print out a help screen and exit.
+.SH ADVANCED OPTIONS
+.TP
+\fB\-r\fR \fB\-\-rounding\fR \fIdiv\fR
+Sets the vxres divisor (default is 128).
+.TP
+\fB\-x\fR \fB\-\-vxres\fR \fIX,X,X,...\fR
+Sets extra vxres values.
+.PP
+[\fIFILES\fR] refers to one or more XF86Config files.  Note that all modelines 
+must be in single-line format.  If no files are given on the command line, 
+this program reads from standard in.  This program will also write to
+standard out.
+.SH EXAMPLE 
+/usr/sbin/modeline2fb \-d 16 /etc/X11/XF86Config
+.SH "SEE ALSO"
+.BR fb.modes(5), 
+.BR XF86Config(5)
+.SH AUTHOR
+This manual page is a quick write-up for Debian done by Kevin Kreamer 
+<kkreamer@etherhogz.org>.

@@ -4,26 +4,22 @@
 
 set -e
 
-#
-# make sure /dev/fb*  exists
-#
-if ! test -c /dev/fb0
-then
-	cd /dev 
-	./MAKEDEV fb
-fi  
+# Source debconf library.
+. /usr/share/debconf/confmodule
+db_version 2.0
 
-# update the menus for fbset (add)
-# if test -x /usr/bin/update-menus
-# then 
-#	update-menus  
-# fi
+# Create framebuffer devices if they don't exist.
+# Don't create them if devfs is used.
 
-#
-# FHS sym-link for /usr/doc -> /usr/share/doc
-#
-if [ "$1" = "configure" ]; then
-	if [ -d /usr/doc -a ! -e /usr/doc/fbset -a -d /usr/share/doc/fbset ]; then
-		ln -sf ../share/doc/fbset /usr/doc/fbset
-	fi
+if [ ! -c /dev/.devfsd ] ; then
+
+  if [ ! -c /dev/fb0 ] ; then
+    db_get fbset/create_framebuffer_devices
+    if [ "$RET" = "true" ]; then
+      cd /dev
+      /sbin/MAKEDEV fb
+    fi
+  fi
+
 fi
+#DEBHELPER#

@@ -1,3 +1,19 @@
+fbset (2.1-6.1) unstable; urgency=medium
+
+  * NMU with permission of maintainer.
+  * Use debhelper v3.
+  * Ask user if we should create framebuffer devices. (Closes: #106232)
+    + Add dependency on debconf as a result of this question.
+    + Do not ask this question if devfs is used.
+  * Kevin Kreamer contributed a manpage for modeline2fb. (Closes: #87145)
+  * Use /sbin/MAKEDEV, not /dev/MAKEDEV, in postinst. (Closes: #55667)
+  * Depend on makedev >= 2.3.1-24 as recommended in #55667.
+  * Describe -a and -accel in the manpage for fbset. (Closes: #105619)
+  * Changed two places in fb.modes manpage to refer to section 5, not 8.
+  * Bumped Standards-Version to 3.5.5.0
+
+ -- André Dahlqvist <andre@debian.org>  Wed, 25 Jul 2001 14:35:29 +0200
+
 fbset (2.1-6) unstable; urgency=low
 
   * added mode "768x576-75" to the /etc/fb.modes database file

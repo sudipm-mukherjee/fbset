@@ -1,54 +1,76 @@
 #!/usr/bin/make -f
-#                                              -*- makefile -*-
-# debian/rules file for the Debian/GNU Linux fbset package
-# Copyright 1998, 1999 by  Hartmut Koptein <koptein@debian.org>
+# Sample debian/rules that uses debhelper.
+# This file is public domain software, originally written by Joey Hess. 
 
-export DH_COMPAT=2
+# Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-package = fbset
+# This is the debhelper compatibility version to use.
+export DH_COMPAT=3
 
 build: build-stamp
 build-stamp:
 	dh_testdir
-	dh_testversion 2
-	$(MAKE) CFLAGS="-g"
+
+	$(MAKE)
+
 	touch build-stamp
 
 clean:
 	dh_testdir
 	dh_testroot
-	-rm -f build-stamp
+	rm -f build-stamp
+
+	# Add here commands to clean up after the build process.
 	-$(MAKE) clean
+
 	dh_clean
 
-binary-indep:	build
-
-binary-arch:	build
+install: build
 	dh_testdir
 	dh_testroot
 	dh_clean -k
-	dh_installdirs etc usr/sbin
-	install -m 755 fbset debian/$(package)/usr/sbin
-	install -m 755 modeline2fb debian/$(package)/usr/sbin
-	install -m 755 con2fbmap debian/$(package)/usr/sbin
-	install -m 644 etc/fb.modes.ATI debian/$(package)/etc/fb.modes
-	dh_installexamples etc/fb.modes.* 
+	dh_installdirs etc usr/sbin usr/share/man/man5 usr/share/man/man8
+	install -m 755 fbset debian/fbset/usr/sbin
+	install -m 755 modeline2fb debian/fbset/usr/sbin
+	install -m 755 con2fbmap debian/fbset/usr/sbin
+	install -m 644 etc/fb.modes.ATI debian/fbset/etc/fb.modes
+	install -m 644 *.8 debian/fbset/usr/share/man/man8
+	install -m 644 *.5 debian/fbset/usr/share/man/man5
+
+# Build architecture-independent files here.
+binary-indep: build install
+# We have nothing to do by default.
+
+# Build architecture-dependent files here.
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_installdebconf	
 	dh_installdocs GetVideoMode.c FAQ kernel-doc
+	dh_installexamples etc/fb.modes.*
+	dh_installmenu
+#	dh_installlogrotate
+#	dh_installemacsen
+#	dh_installpam
+#	dh_installmime
+#	dh_installinit
+#	dh_installcron
+	dh_installman con2fbmap.8 fb.modes.5 fbset.8 debian/modeline2fb.8
+	dh_installinfo
+#	dh_undocumented
 	dh_installchangelogs
-	dh_installmanpages   
-	dh_undocumented      modeline2fb.8 
-	dh_strip -v
+	dh_link
+	dh_strip 
 	dh_compress
 	dh_fixperms
+#	dh_makeshlibs
+	dh_installdeb
+#	dh_perl
 	dh_shlibdeps
 	dh_gencontrol
-	dh_installdeb
 	dh_md5sums
 	dh_builddeb
 
-source diff:
-	@echo >&2 'source and diff are obsolete - use dpkg-source -b'; false
-
-binary:	binary-indep binary-arch
-.PHONY: binary binary-arch binary-indep clean
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install
