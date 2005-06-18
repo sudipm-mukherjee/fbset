@@ -1,6 +1,20 @@
+fbset (2.1-17) unstable; urgency=low
+
+  * Templates:
+    - Update pot and po files.
+    - Czech. (Closes: #308054)
+    Thanks to Miroslav Kure <kurem@upcase.inf.upol.cz>.
+    - Vietnamese. (Closes: #313599)
+    Thanks to Clytie Siddall <clytie@riverland.net.au>.
+  * Merge fbset and fbset-udeb into binary-arch, and on install targets
+    clean only its own package directory.
+    - debian/rules.
+
+ -- Guillem Jover <guillem@debian.org>  Sat, 18 Jun 2005 05:03:36 +0300
+
 fbset (2.1-16) unstable; urgency=low
 
-  * Remove suppored Linux kernel version list from package description.
+  * Remove supported Linux kernel version list from package description.
     (Closes: #286338)
   * Fix typos in con2fbmap.8. (Closes: #287953)
     Thanks to A Costa <agcosta@gis.net>.

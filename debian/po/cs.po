@@ -13,21 +13,21 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fbset 2.1-11\n"
+"Project-Id-Version: fbset\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-06-18 04:24+0300\n"
-"PO-Revision-Date: 2003-11-18 12:00+0500\n"
-"Last-Translator: Ilgiz Kalmetev <translator@ilgiz.pp.ru>\n"
-"Language-Team: russian <debian-russian@lists.debian.org>\n"
+"PO-Revision-Date: 2005-05-07 16:33+0200\n"
+"Last-Translator: Miroslav Kure <kurem@debian.cz>\n"
+"Language-Team: Czech <debian-l10n-czech@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=KOI8-R\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #. Type: note
 #. Description
 #: ../fbset.templates:3
 msgid "Created framebuffer devices"
-msgstr "Устройства framebuffer созданы"
+msgstr "Vytvoе≥ena zaе≥ц╜zenц╜ framebufferu"
 
 #. Type: note
 #. Description
@@ -36,6 +36,5 @@ msgid ""
 "fbset needs framebuffer devices in order to function correctly. These have "
 "been created as /dev/fb[0-7], with the appropriate permissions."
 msgstr ""
-"fbset необходимы устройства framebuffer, чтобы эта функция работала "
-"корректно. Они будут созданы в виде файлов устройств /dev/fb[0-7] с "
-"соответствующими правами доступа."
+"fbset potе≥ebuje pro svou prц║ci zaе≥ц╜zenц╜ framebufferu. Ty byly nynц╜ vytvoе≥eny "
+"s pе≥ц╜sluе║nц╫mi prц║vy jako /dev/fb[0-7]."
