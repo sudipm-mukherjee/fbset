@@ -1,3 +1,26 @@
+fbset (2.1-18) unstable; urgency=low
+
+  * Update watch file to version 3 (no changes needed).
+  * Now using Standards-Version 3.6.2 (no changes needed).
+  * Upgrade to debhelper compat level 5.
+  * Put framebuffer modes as full files:
+    - debian/patches/02_fb_modes.patch: Move full files to ...
+    - debian/modes/: ... here.
+  * Updated to linux kernel 2.6.15:
+    - debian/doc/kernel-doc/: Sync.
+    - debian/modes/fb.modes.CyBla: New file.
+    - debian/patches/01_kernel_fb.h.patch: Likewise.
+    - debian/patches/07_new_accels.patch: Add more accelerated cards.
+  * Move fbset, modeline2fb and con2fbmap to /bin. (Closes: #256972, #320574)
+  * Templates:
+    - Portuguese. (Closes: #338728)
+      Thanks to Miguel Figueiredo <elmig@debianpt.org>.
+    - Swedish. (Closes: #331471)
+      Thanks to Daniel Nylander <yeager@lidkoping.net>.
+  * Depend on udev as a Second Class Citizen alternative to makedev.
+
+ -- Guillem Jover <guillem@debian.org>  Wed, 18 Jan 2006 02:13:39 +0200
+
 fbset (2.1-17) unstable; urgency=low
 
   * Templates:

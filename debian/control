@@ -2,12 +2,12 @@ Source: fbset
 Section: base
 Priority: optional
 Maintainer: Guillem Jover <guillem@debian.org>
-Standards-Version: 3.6.1
-Build-Depends: flex, bison, debhelper (>= 4.2)
+Standards-Version: 3.6.2
+Build-Depends: debhelper (>= 5), flex, bison
 
 Package: fbset
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, makedev (>= 2.3.1-24) | devfsd
+Depends: ${shlibs:Depends}, ${misc:Depends}, makedev (>= 2.3.1-24) | devfsd | udev
 Description: framebuffer device maintenance program
  Program to modify settings for the framebuffer devices (/dev/fb[0-9]*
  or /dev/fb/[0-9]*) on Linux, like depth, virtual resolution, timing
