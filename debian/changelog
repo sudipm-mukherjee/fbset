@@ -1,3 +1,23 @@
+fbset (2.1-19) unstable; urgency=low
+
+  * Now using Standards-Version 3.7.2 (no changes needed).
+  * Fix Upstream URL in the debian/watch file.
+  * Change section from base to admin, to match ftp-master override.
+  * Run /dev/MAKEDEV in debian/fbset.postinst only if present. (Closes: #362794)
+  * Updated to linux kernel 2.6.17.4:
+    - debian/doc/kernel-doc/: Sync.
+    - debian/modes/fb.modes.CyBla: Likewise.
+  * Indent debian/copyright to 4 spaces.
+  * Clean up debian/patch.mk:
+    - Rename clean to unpatch.
+    - Switch patch and unpatch to single-colon targets.
+  * Clean up debian/rules:
+    - Switch clean to single-colon target, make it depend on unpatch.
+  * Templates:
+    - Catalan: Changed encoding to UTF-8.
+
+ -- Guillem Jover <guillem@debian.org>  Thu,  3 Aug 2006 05:33:32 +0300
+
 fbset (2.1-18) unstable; urgency=low
 
   * Update watch file to version 3 (no changes needed).
