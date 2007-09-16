@@ -19,13 +19,10 @@ endif
 PACKAGE = fbset
 UDEB_PACKAGE = $(PACKAGE)-udeb
 
-include debian/patch.mk
-
-debian/po/templates.pot: debian/fbset.templates
-	@debconf-updatepo
+include /usr/share/quilt/quilt.make
 
 build: build-stamp
-build-stamp: patch debian/po/templates.pot
+build-stamp: patch
 	dh_testdir
 	
 	rm -f build-stamp*
@@ -49,7 +46,10 @@ clean: unpatch
 	dh_testroot
 	rm -f build-stamp*
 	
-	-$(MAKE) clean
+	$(MAKE) clean
+	
+	# FIXME: this can be removed once and if con2fbmap is merged upstream
+	rm -f con2fbmap
 	
 	dh_clean
 
@@ -59,7 +59,7 @@ install: build
 	dh_clean -k -p$(PACKAGE)
 	dh_installdirs
 	
-	-$(MAKE) install DESTDIR=$(CURDIR)/debian/$(PACKAGE)
+	$(MAKE) install DESTDIR=$(CURDIR)/debian/$(PACKAGE)
 
 install-udeb: build-udeb
 	dh_testdir
@@ -67,7 +67,7 @@ install-udeb: build-udeb
 	dh_clean -k -p$(UDEB_PACKAGE)
 	dh_installdirs
 	
-	-$(MAKE) install DESTDIR=$(CURDIR)/debian/$(UDEB_PACKAGE)
+	$(MAKE) install DESTDIR=$(CURDIR)/debian/$(UDEB_PACKAGE)
 	rm -rf $(CURDIR)/debian/$(UDEB_PACKAGE)/usr
 
 binary-indep:
@@ -76,7 +76,6 @@ binary-indep:
 binary-arch: install install-udeb
 	dh_testdir
 	dh_testroot
-	dh_installdebconf -a
 	dh_installdocs -a
 	dh_installexamples -a
 #	dh_installinit

@@ -1,3 +1,31 @@
+fbset (2.1-20) unstable; urgency=low
+
+  * Switched to quilt:
+    - Add new debian/patches/series file.
+    - Add Build-Depends on 'quilt (>= 0.40)'.
+    - Include quilt.make from debian/rules.
+    - Remove now unused debian/patch.mk.
+    - Add a Status field in all patches, and refreshed them.
+  * Add a Homepage field.
+  * Add Vcs-Browser and Vcs-Svn fields.
+  * Update download URL in debian/copyright.
+  * Do not ignore errors from 'make clean' nor 'make install' in debian/rules.
+  * Remove con2fbmap on clean so that it does not FTBFS on a second row.
+    (Closes: #424250, #442561)
+  * Fix bashisms in Makefile when creating directories. (Closes: #417476)
+    - debian/patches/10_build.patch: Modified.
+  * Remove useless debconf note about device creation. (Closes: #390567)
+    - debian/fbset.templates: Remove.
+    - debian/fbset.config. Likewise.
+    - debian/po/: Likewise.
+    - debian/rules: Remove debconf support.
+    - debian/fbset.postinst: Likewise.
+  * Only try to create the device node on '<postinst> configure'.
+  * Updated to linux kernel 2.6.22.3:
+    - debian/doc/kernel-doc/: Sync.
+
+ -- Guillem Jover <guillem@debian.org>  Sun, 16 Sep 2007 19:53:31 +0300
+
 fbset (2.1-19) unstable; urgency=low
 
   * Now using Standards-Version 3.7.2 (no changes needed).
