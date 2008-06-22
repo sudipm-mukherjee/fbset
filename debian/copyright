@@ -10,13 +10,9 @@ The upstream source was downloaded from:
 
     <http://users.telenet.be/geertu/Linux/fbdev/>
 
-The debian packages are maintained through Subversion on:
+Copyright Holder:
 
-    <svn://svn.debian.org/pkg-fbset/>
-
-Upstream Author:
-
-    Copyright (C) 1995-1998 Geert Uytterhoeven <geert@linux-m68k.org>
+    Copyright © 1995-1998 Geert Uytterhoeven <geert@linux-m68k.org>
 
 License:
 
@@ -47,5 +43,5 @@ distribution', so that must be the GNU General Public License Version 2.
 --------------- Clarification ----------------------------------------
 
 On Debian GNU/Linux systems, the complete text of the GNU General
-Public License can be found in '/usr/share/common-licenses/GPL'.
+Public License can be found in '/usr/share/common-licenses/GPL-2'.
 
