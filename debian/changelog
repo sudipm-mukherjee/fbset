@@ -1,3 +1,25 @@
+fbset (2.1-24) unstable; urgency=low
+
+  * Switch to debhelper compatibility level 7.
+  * Use dh_prep instead of “dh_clean -k”.
+  * Use $(filter ...) instead of $(findstring ...) to extract space separated
+    options from DEB_BUILD_OPTIONS in debian/rules.
+  * Now using Standards-Version 3.8.3 (no changes needed).
+  * Update to Linux kernel 2.6.32-rc7:
+    - debian/doc/kernel-doc/: Sync.
+    - debian/patches/01_kernel_fb.h.patch: Likewise.
+    - debian/patches/07_new_accels.patch: Add more accelerated cards.
+    - debian/modes/fb.modes.viafb: New modes file.
+  * Remove ‘+’ line prefixes in ATI modes files from the time .diff.gz
+    changes got converted to standalone files.
+  * Switch to source format “3.0 (quilt)”:
+    - Remove quilt from Build-Depends.
+    - Remove quilt.make include from debian/rules.
+    - Remove patch and unpatch targets from debian/rules.
+    - Remove now unneeded debian/README.source.
+
+ -- Guillem Jover <guillem@debian.org>  Sat, 14 Nov 2009 03:23:30 +0100
+
 fbset (2.1-23) unstable; urgency=low
 
   * Fix misspelling of Debian (from debian).

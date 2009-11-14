@@ -8,7 +8,7 @@
 CFLAGS = -Wall -g
 UDEB_CFLAGS = -Wall -g
 
-ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+ifneq (,$(filter noopt,$(DEB_BUILD_OPTIONS)))
 	CFLAGS += -O0
 	UDEB_CFLAGS += -O0
 else
@@ -19,10 +19,8 @@ endif
 PACKAGE = fbset
 UDEB_PACKAGE = $(PACKAGE)-udeb
 
-include /usr/share/quilt/quilt.make
-
 build: build-stamp
-build-stamp: patch
+build-stamp:
 	dh_testdir
 	
 	rm -f build-stamp*
@@ -32,7 +30,7 @@ build-stamp: patch
 	touch $@
 
 build-udeb: build-stamp-udeb
-build-stamp-udeb: patch
+build-stamp-udeb:
 	dh_testdir
 	
 	rm -f build-stamp*
@@ -41,7 +39,7 @@ build-stamp-udeb: patch
 	
 	touch $@
 
-clean: unpatch
+clean:
 	dh_testdir
 	dh_testroot
 	rm -f build-stamp*
@@ -56,7 +54,7 @@ clean: unpatch
 install: build
 	dh_testdir
 	dh_testroot
-	dh_clean -k -p$(PACKAGE)
+	dh_prep -p$(PACKAGE)
 	dh_installdirs
 	
 	$(MAKE) install DESTDIR=$(CURDIR)/debian/$(PACKAGE)
@@ -64,7 +62,7 @@ install: build
 install-udeb: build-udeb
 	dh_testdir
 	dh_testroot
-	dh_clean -k -p$(UDEB_PACKAGE)
+	dh_prep -p$(UDEB_PACKAGE)
 	dh_installdirs
 	
 	$(MAKE) install DESTDIR=$(CURDIR)/debian/$(UDEB_PACKAGE)
