@@ -1,3 +1,31 @@
+fbset (2.1-25) unstable; urgency=low
+
+  * Fix some missinformation in fbset(8).
+    - Use an actual mode (“640x480-60”) instead of “vga” in the example.
+    - Point to the correct path for the compressed FAQ.
+    Thanks to Pavel Machek <pavel@ucw.cz>. Closes: #577449
+  * Invert alternative dependency order for “makedev | udev” so that udev
+    which has a higher priority goes first. Closes: #546865
+  * Change binary package Architecture field values from any to linux-any.
+  * Update to Linux kernel 3.0.0-rc1:
+    - debian/doc/kernel-doc/: Sync.
+    - debian/patches/01_kernel_fb.h.patch: Likewise.
+    - debian/patches/07_new_accels.patch: Add more accelerated cards.
+  * Fix upstream Makefile to support out of tree builds.
+  * Rework debian/rules targets:
+    - Create an empty build-indep target.
+    - Use out of tree builds.
+    - Merge build and build-udeb into a new build-arch target, and
+      install and install-udeb into install-arch target, as they are
+      not parallelizable anyway.
+  * Now using Standards-Version 3.9.2 (no changes needed).
+  * Add ${misc:Depends} substvar to fbset-udeb Depends field.
+  * Remove long obsolete devfs support patch.
+  * Rename UDEB_CFLAGS to CFLAGS_UDEB and UDEB_PACKAGE to PACKAGE_UDEB.
+  * Use dpkg-buildflags to set CPPFLAGS, CFLAGS and LDFLAGS.
+
+ -- Guillem Jover <guillem@debian.org>  Wed, 01 Jun 2011 06:27:30 +0200
+
 fbset (2.1-24) unstable; urgency=low
 
   * Switch to debhelper compatibility level 7.
@@ -423,4 +451,3 @@ fbset (1.0-1) unstable; urgency=low
   * Initial Release.
 
  -- Frank Neumann <Frank.Neumann@Informatik.Uni-Oldenburg.DE>  Wed, 16 Apr 1997 18:47:56 +0200
-
