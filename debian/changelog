@@ -1,3 +1,10 @@
+fbset (2.1-26) unstable; urgency=low
+
+  * Now using Standards-Version 3.9.4 (no changes needed).
+  * Remove package creation information from debian/copyright.
+
+ -- Guillem Jover <guillem@debian.org>  Sat, 11 May 2013 17:10:32 +0200
+
 fbset (2.1-25) unstable; urgency=low
 
   * Fix some missinformation in fbset(8).
