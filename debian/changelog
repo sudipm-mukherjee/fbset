@@ -1,3 +1,19 @@
+fbset (2.1-29) unstable; urgency=medium
+
+  * QA upload.
+  * Update to Linux kernel 4.10-rc4:
+    - debian/doc/kernel-doc/: Sync.
+    - debian/patches/01_kernel_fb.h.patch: Likewise.
+    - debian/modes/fb.modes.viafb: Likewise.
+  * Now using Standards-Version 3.9.8 (no changes needed).
+  * Switch Vcs-Browser to a cgit URL.
+  * Use https for hadrons.org URLs.
+  * Switch debian/copyright to machine-readable format 1.0.
+  * Switch to the dpkg makefile fragments in debian/rules.
+  * Enable all hardening flags.
+
+ -- Guillem Jover <guillem@debian.org>  Thu, 19 Jan 2017 01:11:33 +0100
+
 fbset (2.1-28) unstable; urgency=low
 
   * Orphan package, set maintainer to Debian QA Group.
