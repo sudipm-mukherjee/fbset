@@ -1,3 +1,13 @@
+fbset (2.1-30) unstable; urgency=medium
+
+  * Line-wrap and sort dependency fields.
+  * Now using Standards-Version 4.1.1 (no changes needed).
+  * Switch debhelper compatibility level to 10.
+  * Switch debian/watch format version to 4.
+  * Set Rules-Requires-Root to no.
+
+ -- Guillem Jover <guillem@debian.org>  Sun, 12 Nov 2017 00:29:03 +0100
+
 fbset (2.1-29) unstable; urgency=medium
 
   * QA upload.
