@@ -1,5 +1,5 @@
 #!/usr/bin/make -f
-# This file is public domain software, originally written by Joey Hess. 
+# This file is public domain software, originally written by Joey Hess.
 
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1

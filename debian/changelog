@@ -1,3 +1,13 @@
+fbset (2.1-31) unstable; urgency=low
+  * Update Maintainer (Closes: #740580)
+  * sync with Linux Kernel v5.4-rc6
+  * Update to Standards-Version 4.4.1
+  * Use compatibility level 12
+  * Change Priority to optional and remove duplicate Priority
+  * Use github as Vcs
+
+ -- Sudip Mukherjee <sudipm.mukherjee@gmail.com>  Fri, 08 Nov 2019 20:47:58 +0000
+
 fbset (2.1-30) unstable; urgency=medium
 
   * Line-wrap and sort dependency fields.
@@ -425,7 +435,7 @@ fbset (2.1-6) unstable; urgency=low
   * added mode "768x576-75" to the /etc/fb.modes database file
     reported by: Gabor Fleischer <flocsy@mtesz.hu>
 
- -- Hartmut Koptein <koptein@debian.org>  Tue,  4 Jan 2000 20:48:20 +0100 
+ -- Hartmut Koptein <koptein@debian.org>  Tue,  4 Jan 2000 20:48:20 +0100
 
 fbset (2.1-5) unstable; urgency=low
 
