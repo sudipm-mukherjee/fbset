@@ -1,4 +1,4 @@
-.TH fbset 8 "July 1998" local "Linux frame buffer utils"
+.TH fbset 1 2010-04-12 2.1 "Linux frame buffer utils"
 .SH NAME
 fbset \- show and modify frame buffer device settings
 .SH SYNOPSIS
@@ -6,8 +6,6 @@ fbset \- show and modify frame buffer device settings
 .RI [ options ]
 .RI [ mode ]
 .SH DESCRIPTION
-.B This documentation is out of date!!
-.PP
 .B fbset
 is a system utility to show or change the settings of the frame buffer
 device. The frame buffer device provides a simple and unique interface to
@@ -36,10 +34,8 @@ General options:
 .BR \-\-help ",\ " \-h
 display an usage information
 .TP
-.BR \-\-now ",\ " \-n
-change the video mode immediately. If no frame buffer device is given via
-.B \-fb
-, then this option is activated by default
+.BR \-\-test
+don't change, just test whether the mode is valid
 .TP
 .BR \-\-show ",\ " \-s
 display the video mode settings. This is default if no further option or
@@ -66,6 +62,9 @@ display the timing information as it's needed by XFree86
 Frame buffer device nodes:
 .RS
 .TP
+.BR \-\-all ",\ "  \-a
+change all virtual consoles on this device
+.TP
 .BR \-fb "\ <" \fIdevice >
 .I device
 gives the frame buffer device node. If no device via
@@ -73,7 +72,6 @@ gives the frame buffer device node. If no device via
 is given, 
 .I /dev/fb0
 is used
-.TP
 .RE
 .PP
 Video mode database:
@@ -84,6 +82,13 @@ set an alternative video mode database file (default is
 .IR /etc/fb.modes ),
 see also
 .BR fb.modes (5)
+.RE
+.PP
+Display bitfield colors:
+.RS
+.TP
+.BR \-rgba "\ <" \fIred , \fIgreen , \fIblue , \fIalpha >
+each in length or length/offset color format
 .RE
 .PP
 Display geometry:
@@ -103,6 +108,10 @@ set virtual vertical resolution (in pixels)
 .TP
 .BR \-depth "\ <" \fIvalue >
 set display depth (in bits per pixel)
+.TP
+.TP
+.BR \-nonstd "\ <" \fIvalue >
+select nonstandard video mode
 .TP
 .BR \-\-geometry ",\ " \-g "\ ..."
 set all geometry parameters at once in the order
@@ -154,12 +163,15 @@ set all timing parameters at once in the order
 .RI < hslen >
 .RI < vslen >,
 e.g.
-.B \-g
+.B \-t
 .I 35242 64 96 35 12 112 2
 .RE
 .PP
 Display flags:
 .RS
+.TP
+.IR \fB\-accel "\ {" false | true }
+set hardware text acceleration enable
 .TP
 .IR \fB\-hsync "\ {" low | high }
 set the horizontal sync polarity
@@ -169,6 +181,9 @@ set the vertical sync polarity
 .TP
 .IR \fB\-csync "\ {" low | high }
 set the composite sync polarity
+.TP
+.IR \fB\-gsync "\ {" false | true }
+set synch on green
 .TP
 .IR \fB\-extsync "\ {" false | true }
 enable or disable external resync. If enabled the sync timings are not
@@ -217,7 +232,7 @@ insert the following in rc.local:
 .B fbset
 -fb
 .I /dev/fb0
-vga
+640x480\-60
 .sp
 .RE
 and make the used frame buffer device known to
@@ -232,7 +247,7 @@ and make the used frame buffer device known to
 .br
 .I /etc/fb.modes
 .SH SEE ALSO
-.BR fb.modes "(5), " fbdev (4)
+.BR fb.modes "(5), " fbdev "(4), " /usr/share/doc/fbset/FAQ.gz
 .SH AUTHORS
 .TP
 Geert Uytterhoeven <Geert.Uytterhoeven@cs.kuleuven.ac.be>

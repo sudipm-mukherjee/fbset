@@ -1,4 +1,4 @@
-.TH fb.modes 8 "Aug 1996" local "Linux frame buffer utils"
+.TH fb.modes 5 2003-08-07 2.1 "Linux frame buffer utils"
 .SH NAME
 fb.modes \- frame buffer modes file
 .SH DESCRIPTION
@@ -27,6 +27,9 @@ timings
 .br
 .B options
 .RI < value >
+.br
+.B rgba
+.RI < red , green , blue , alpha >
 .RE
 endmode
 .SH OPTIONS
@@ -74,6 +77,22 @@ horizontal sync length (in pixels)
 vertical sync length (in pixel lines)
 .RE
 .PP
+rgba options (only valid with truecolor):
+.RS
+.TP
+.I red
+red color bitfields (in length or length/offset)
+.TP
+.I green
+green color bitfields (in length or length/offset)
+.TP
+.I blue
+blue color bitfields (in length or length/offset)
+.TP
+.I alpha
+alpha color bitfields (in length or length/offset)
+.RE
+.PP
 other options:
 .RS
 the first value of this options is the default
@@ -86,6 +105,14 @@ the vertical sync polarity
 .TP
 .IR \fBcsync "\ {" low | high }
 the composite sync polarity
+.TP
+.IR \fBgsync "\ {" low | high }
+the sync on green polarity
+.TP
+.IR \fBbcast "\ {" false | true }
+enable or disable broadcast modes. If enabled the frame buffer generates
+the exact timings fot several broadcast modes (e.g. PAL or NTSC). Note that
+this option may not be supported by every frame buffer
 .TP
 .IR \fBextsync "\ {" false | true }
 enable or disable external resync. If enabled the sync timings are not
@@ -106,6 +133,15 @@ and this way the horizontal frequency can easily be doubled, so that the
 same resolution can be displayed on different monitors, even if the
 horizontal frequency specification differs. Note that this option may not be
 supported by every frame buffer device
+.TP
+.IR \fBnostd "\ <" number >
+select nonstandard video mode
+.TP
+.IR \fBaccel "\ {" false | true }
+enable or disable hardware text acceleration
+.TP
+.IR \fBgrayscale "\ {" false | true }
+enable or disable graylevels instead of colors
 .RE
 .SH INTERNALS
 Generally a frame buffer display is organized as follows:
