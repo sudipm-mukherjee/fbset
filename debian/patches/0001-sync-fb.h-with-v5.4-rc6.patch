@@ -1,0 +1,34 @@
+From 3e99f89d4ec474bb14eb3671083c5c4032dc2c83 Mon Sep 17 00:00:00 2001
+From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Date: Fri, 8 Nov 2019 17:36:32 +0000
+Subject: [PATCH 2/2] sync fb.h with v5.4-rc6
+
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+---
+ fb.h | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/fb.h b/fb.h
+index fb795c3..b6aac7e 100644
+--- a/fb.h
++++ b/fb.h
+@@ -1,3 +1,4 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+ #ifndef _UAPI_LINUX_FB_H
+ #define _UAPI_LINUX_FB_H
+ 
+@@ -392,11 +393,9 @@ struct fb_cursor {
+ 	struct fb_image	image;	/* Cursor image */
+ };
+ 
+-#ifdef CONFIG_FB_BACKLIGHT
+ /* Settings for the generic backlight code */
+ #define FB_BACKLIGHT_LEVELS	128
+ #define FB_BACKLIGHT_MAX	0xFF
+-#endif
+ 
+ 
+ #endif /* _UAPI_LINUX_FB_H */
+-- 
+2.11.0
+
