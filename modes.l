@@ -99,6 +99,7 @@ static const char *CopyString(const char *s)
 
 keyword	[a-zA-Z][a-zA-Z0-9]*
 number	[0-9]*
+colors	[0-9/,]*
 string	\"[^\"\n]*\"
 comment	\#([^\n]*)
 space	[ \t]+
@@ -113,6 +114,11 @@ junk	.
 {number}    {
 		yylval = strtoul(yytext, NULL, 0);
 		return NUMBER;
+	    }
+
+{colors}    {
+		yylval = (unsigned long)CopyString(yytext);
+		return COLORS;
 	    }
 
 {string}    {

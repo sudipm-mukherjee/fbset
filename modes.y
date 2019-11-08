@@ -42,7 +42,7 @@ static void ClearVideoMode(void)
 
 %token MODE GEOMETRY TIMINGS HSYNC VSYNC CSYNC GSYNC EXTSYNC BCAST LACED DOUBLE
        RGBA NONSTD ACCEL GRAYSCALE
-       ENDMODE POLARITY BOOLEAN STRING NUMBER 
+       ENDMODE POLARITY BOOLEAN STRING NUMBER COLORS
 
 %%
 
@@ -148,7 +148,7 @@ double	  : DOUBLE BOOLEAN
 	    }
 	  ;
 
-rgba      : RGBA STRING
+rgba      : RGBA COLORS
             {
 		makeRGBA(&VideoMode, (const char*)$2);
 	    }
