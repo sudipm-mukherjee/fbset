@@ -16,6 +16,9 @@
  *  Brad Midgley <brad@exodus.pht.com>:
  *           -match
  *
+ *  David Kozub <zub@linux.fjfi.cvut.cz>:
+ *           -sync
+ *
  */
 
 
@@ -52,6 +55,12 @@ struct inode;
 
 
     /*
+     *  Mask to zero-out all known sync flags
+     */
+#define FB_CUSTOM_SYNC_MASK ~(FB_SYNC_HOR_HIGH_ACT|FB_SYNC_VERT_HIGH_ACT| \
+    FB_SYNC_COMP_HIGH_ACT|FB_SYNC_ON_GREEN|FB_SYNC_EXT|FB_SYNC_BROADCAST)
+
+    /*
      *  Command Line Options
      */
 
@@ -86,6 +95,7 @@ static const char *Opt_vsync = NULL;
 static const char *Opt_csync = NULL;
 static const char *Opt_gsync = NULL;
 static const char *Opt_extsync = NULL;
+static const char *Opt_sync = NULL;
 static const char *Opt_bcast = NULL;
 static const char *Opt_laced = NULL;
 static const char *Opt_double = NULL;
@@ -123,6 +133,7 @@ static struct {
     { "-csync", &Opt_csync, 1 },
     { "-gsync", &Opt_gsync, 1 },
     { "-extsync", &Opt_extsync, 1 },
+    { "-sync", &Opt_sync, 1 },
     { "-bcast", &Opt_bcast, 1 },
     { "-laced", &Opt_laced, 1 },
     { "-double", &Opt_double, 1 },
@@ -402,6 +413,7 @@ static void ConvertFromVideoMode(const struct VideoMode *vmode,
 	var->sync |= FB_SYNC_EXT;
     if (vmode->bcast == TRUE)
 	var->sync |= FB_SYNC_BROADCAST;
+    var->sync |= vmode->sync;
     if (vmode->laced == TRUE)
 	var->vmode = FB_VMODE_INTERLACED;
     else if (vmode->dblscan == TRUE)
@@ -445,6 +457,7 @@ static void ConvertToVideoMode(const struct fb_var_screeninfo *var,
     vmode->gsync = var->sync & FB_SYNC_ON_GREEN ? TRUE : FALSE;
     vmode->extsync = var->sync & FB_SYNC_EXT ? TRUE : FALSE;
     vmode->bcast = var->sync & FB_SYNC_BROADCAST ? TRUE : FALSE;
+    vmode->sync = var->sync & FB_CUSTOM_SYNC_MASK;
     vmode->grayscale = var->grayscale;
     vmode->laced = FALSE;
     vmode->dblscan = FALSE;
@@ -554,6 +567,27 @@ void makeRGBA(struct VideoMode *vmode, const char* opt)
 }
 
     /*
+     *  Take known bits from sync and set appropriate flags instead
+     */
+
+void fixCustomSync(struct VideoMode *vmode)
+{
+    if (vmode->sync & FB_SYNC_HOR_HIGH_ACT)
+	vmode->hsync = 1;
+    if (vmode->sync & FB_SYNC_VERT_HIGH_ACT)
+	vmode->vsync = 1;
+    if (vmode->sync & FB_SYNC_COMP_HIGH_ACT)
+	vmode->csync = 1;
+    if (vmode->sync & FB_SYNC_ON_GREEN)
+	vmode->gsync = 1;
+    if (vmode->sync & FB_SYNC_EXT)
+	vmode->extsync =1;
+    if (vmode->sync & FB_SYNC_BROADCAST)
+	vmode->bcast = 1;
+    vmode->sync &= FB_CUSTOM_SYNC_MASK;
+}
+
+    /*
      *  Find a Video Mode
      */
 
@@ -617,6 +651,12 @@ static void ModifyVideoMode(struct VideoMode *vmode)
 	vmode->extsync = atoboolean(Opt_extsync);
     if (Opt_bcast)
 	vmode->bcast = atoboolean(Opt_bcast);
+    if (Opt_sync)
+    {
+	vmode->sync = strtoul(Opt_sync, NULL, 0);
+	// call this only once all the other sync fields are determined!
+	fixCustomSync(vmode);
+    }
     if (Opt_laced)
 	vmode->laced = atoboolean(Opt_laced);
     if (Opt_double)
@@ -693,6 +733,8 @@ static void DisplayVModeInfo(struct VideoMode *vmode)
 	    puts("    extsync true");
 	if (vmode->bcast)
 	    puts("    bcast true");
+	if (vmode->sync)
+	    printf("    sync 0x%x\n", vmode->sync);
 	if (vmode->laced)
 	    puts("    laced true");
 	if (vmode->dblscan)
@@ -745,6 +787,8 @@ static void DisplayVModeInfo(struct VideoMode *vmode)
 	    puts("    # Warning: XFree86 doesn't support extsync\n");
 	if (vmode->bcast)
 	    printf(" \"bcast\"");
+	if (vmode->sync)
+	    puts("    # Warning: XFree86 doesn't support custom sync values\n");
 	if (vmode->accel_flags)
 	    puts("    # Warning: XFree86 doesn't support accel\n");
 	if (vmode->grayscale)
@@ -931,6 +975,7 @@ static void Usage(void)
 	"    -csync <value>     : composite sync polarity (low or high)\n"
 	"    -gsync <value>     : synch on green (false or true)\n"
 	"    -extsync <value>   : external sync enable (false or true)\n"
+	"    -sync <value>      : custom (driver specific) sync value\n"
 	"    -bcast <value>     : broadcast enable (false or true)\n"
 	"    -laced <value>     : interlace enable (false or true)\n"
 	"    -double <value>    : doublescan enable (false or true)\n"

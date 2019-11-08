@@ -40,7 +40,7 @@ static void ClearVideoMode(void)
 
 %start file
 
-%token MODE GEOMETRY TIMINGS HSYNC VSYNC CSYNC GSYNC EXTSYNC BCAST LACED DOUBLE
+%token MODE GEOMETRY TIMINGS HSYNC VSYNC CSYNC GSYNC EXTSYNC SYNC BCAST LACED DOUBLE
        RGBA NONSTD ACCEL GRAYSCALE
        ENDMODE POLARITY BOOLEAN STRING NUMBER COLORS
 
@@ -91,6 +91,7 @@ options	  : /* empty */
 	  | options csync
 	  | options gsync
 	  | options extsync
+	  | options sync
 	  | options bcast
 	  | options laced
 	  | options double
@@ -127,6 +128,13 @@ gsync	  : GSYNC POLARITY
 extsync	  : EXTSYNC BOOLEAN
 	    {
 		VideoMode.extsync = $2;
+	    }
+	  ;
+
+sync: SYNC NUMBER
+	    {
+		VideoMode.sync = $2;
+		fixCustomSync(&VideoMode);
 	    }
 	  ;
 

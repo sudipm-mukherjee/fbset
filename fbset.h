@@ -64,6 +64,8 @@ struct VideoMode {
     unsigned laced : 1;
     unsigned dblscan : 1;
     unsigned grayscale : 1;
+    /* extra (fb driver specific) sync bits */
+    __u32 sync;
     /* scanrates */
     double drate;
     double hrate;
@@ -80,3 +82,4 @@ extern int yyparse(void);
 extern void Die(const char *fmt, ...) __attribute__ ((noreturn));
 extern void AddVideoMode(const struct VideoMode *vmode);
 extern void makeRGBA(struct VideoMode *vmode, const char* opt);
+extern void fixCustomSync(struct VideoMode *vmode);
