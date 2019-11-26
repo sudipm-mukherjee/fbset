@@ -215,5 +215,5 @@ int main(void)
       for (id = INVALID_ID; (id = NextDisplayInfo(id)) != INVALID_ID;)
          GetVideoMode(id, args[1]);
 
-   return(0);
+   return 0;
 }

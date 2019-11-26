@@ -38,15 +38,13 @@ display an usage information
 .TP
 .BR \-\-now ",\ " \-n
 change the video mode immediately. If no frame buffer device is given via
-.B \-ofb
+.B \-fb
 , then this option is activated by default
 .TP
 .BR \-\-show ",\ " \-s
 display the video mode settings. This is default if no further option or
 only a frame buffer device via
-.B \-ifb
-or
-.B \-ofb
+.B \-fb
 is given
 .TP
 .BR \-\-info ",\ " \-i
@@ -68,20 +66,14 @@ display the timing information as it's needed by XFree86
 Frame buffer device nodes:
 .RS
 .TP
-.BR \-ofb "\ <" \fIdevice >
+.BR \-fb "\ <" \fIdevice >
 .I device
-gives the output frame buffer device node. If no device via
-.B \-ofb
+gives the frame buffer device node. If no device via
+.B \-fb
 is given, 
 .I /dev/fb0
 is used
 .TP
-.BR \-ifb "\ <" \fIdevice >
-read the used settings from another frame buffer device. If
-.I \-ifb
-is not given, the input frame buffer will be the same as the output frame
-buffer set via
-.I \-ofb
 .RE
 .PP
 Video mode database:
@@ -122,6 +114,9 @@ set all geometry parameters at once in the order
 e.g.
 .B \-g
 .I 640 400 640 400 4
+.TP
+.BR \-match "\ \ \ \ \ \ "
+make the physical resolution match the virtual resolution
 .RE
 .PP
 Display timings:
@@ -220,7 +215,7 @@ insert the following in rc.local:
 .RS
 .sp
 .B fbset
--ofb
+-fb
 .I /dev/fb0
 vga
 .sp
@@ -241,9 +236,7 @@ and make the used frame buffer device known to
 .SH AUTHORS
 .TP
 Geert Uytterhoeven <Geert.Uytterhoeven@cs.kuleuven.ac.be>
-until version 1.0
 .TP
-Roman Zippel <roman@sodom.obdg.de>
-from version 1.0
+Roman Zippel <zippel@fh-brandenburg.de>
 .br
 man files

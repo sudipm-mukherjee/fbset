@@ -31,10 +31,17 @@
 #define FB_TYPE_PLANES			1	/* Non interleaved planes */
 #define FB_TYPE_INTERLEAVED_PLANES	2	/* Interleaved planes	*/
 #define FB_TYPE_TEXT			3	/* Text/attributes	*/
+#define FB_TYPE_VGA_PLANES		4	/* EGA/VGA planes	*/
 
 #define FB_AUX_TEXT_MDA		0	/* Monochrome text */
 #define FB_AUX_TEXT_CGA		1	/* CGA/EGA/VGA Color text */
 #define FB_AUX_TEXT_S3_MMIO	2	/* S3 MMIO fasttext */
+#define FB_AUX_TEXT_MGA_STEP16	3	/* MGA Millenium I: text, attr, 14 reserved bytes */
+#define FB_AUX_TEXT_MGA_STEP8	4	/* other MGAs:      text, attr,  6 reserved bytes */
+
+#define FB_AUX_VGA_PLANES_VGA4		0	/* 16 color planes (EGA/VGA) */
+#define FB_AUX_VGA_PLANES_CFB4		1	/* CFB4 in planes (VGA) */
+#define FB_AUX_VGA_PLANES_CFB8		2	/* CFB8 in planes (VGA) */
 
 #define FB_VISUAL_MONO01		0	/* Monochr. 1=Black 0=White */
 #define FB_VISUAL_MONO10		1	/* Monochr. 1=White 0=Black */
@@ -65,6 +72,11 @@
 #define FB_ACCEL_MATROX_MGA2164W_AGP 19	/* Matrox MGA2164W (Millenium II) */
 #define FB_ACCEL_MATROX_MGAG100	20	/* Matrox G100 (Productiva G100) */
 #define FB_ACCEL_MATROX_MGAG200	21	/* Matrox G200 (Myst, Mill, ...) */
+#define FB_ACCEL_SUN_CG14	22	/* Sun cgfourteen		 */
+#define FB_ACCEL_SUN_BWTWO	23	/* Sun bwtwo			 */
+#define FB_ACCEL_SUN_CGTHREE	24	/* Sun cgthree			 */
+#define FB_ACCEL_SUN_TCX	25	/* Sun tcx			 */
+#define FB_ACCEL_MATROX_MGAG400	26	/* Matrox G400			 */
 
 struct fb_fix_screeninfo {
 	char id[16];			/* identification string eg "TT Builtin" */
@@ -230,6 +242,8 @@ struct fb_ops {
 		    unsigned long arg, int con, struct fb_info *info);
     /* perform fb specific mmap */
     int (*fb_mmap)(struct fb_info *info, struct file *file, struct vm_area_struct *vma);
+    /* switch to/from raster image mode */
+    int (*fb_rasterimg)(struct fb_info *info, int start);
 };
 
 
@@ -289,7 +303,7 @@ struct display {
 
 struct fb_info {
    char modename[40];			/* default video mode */
-   int node;
+   kdev_t node;
    int flags;
 #define FBINFO_FLAG_MODULE	1	/* Low-level driver is a module */
    struct fb_ops *fbops;
@@ -338,8 +352,8 @@ struct fbgen_hwswitch {
     int (*pan_display)(const struct fb_var_screeninfo *var,
 		       struct fb_info_gen *info);
     int (*blank)(int blank_mode, struct fb_info_gen *info);
-    void (*set_dispsw)(const void *par, struct display *disp,
-		       struct fb_info_gen *info);
+    void (*set_disp)(const void *par, struct display *disp,
+		     struct fb_info_gen *info);
 };
 
 struct fb_info_gen {

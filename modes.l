@@ -15,6 +15,8 @@
 
 %{
 
+#define YYSTYPE		long
+
 #include <string.h>
 #include <stdlib.h>
 
@@ -39,6 +41,10 @@ static struct keyword keywords[] = {
     { "bcast", BCAST, 0 },
     { "laced", LACED, 0 },
     { "double", DOUBLE, 0 },
+    { "rgba", RGBA, 0 },
+    { "nonstd", NONSTD, 0 },
+    { "accel", ACCEL, 0 },
+    { "grayscale", GRAYSCALE, 0 },
     { "endmode", ENDMODE, 0 },
     { "low", POLARITY, LOW },
     { "high", POLARITY, HIGH },
@@ -58,7 +64,7 @@ void yyerror(const char *s)
 
 int yywrap(void)
 {
-    return(1);
+    return 1;
 }
 
 
@@ -69,7 +75,7 @@ static int FindToken(const char *s)
     for (i = 0; keywords[i].token > 0; i++)
 	if (!strcasecmp(s, keywords[i].name)) {
 	    yylval = keywords[i].value;
-	    return(keywords[i].token);
+	    return keywords[i].token;
 	}
     Die("%s:%d: Unknown keyword `%s'\n", Opt_modedb, line, s);
 }
@@ -85,7 +91,7 @@ static const char *CopyString(const char *s)
 	Die("No memory\n");
     strncpy(s2, s+1, len);
     s2[len] = '\0';
-    return(s2);
+    return s2;
 }
 
 
@@ -101,17 +107,17 @@ junk	.
 %%
 
 {keyword}   {
-		return(FindToken(yytext));
+		return FindToken(yytext);
 	    }
 
 {number}    {
 		yylval = strtoul(yytext, NULL, 0);
-		return(NUMBER);
+		return NUMBER;
 	    }
 
 {string}    {
 		yylval = (unsigned long)CopyString(yytext);
-		return(STRING);
+		return STRING;
 	    }
 
 {comment}$  break;
