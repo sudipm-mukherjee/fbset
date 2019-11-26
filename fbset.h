@@ -1,7 +1,7 @@
 /*
- *  Linux/m68k Frame Buffer Device Configuration
+ *  Linux Frame Buffer Device Configuration
  *
- *  © Copyright 1995 by Geert Uytterhoeven
+ *  © Copyright 1995-1998 by Geert Uytterhoeven
  *			(Geert.Uytterhoeven@cs.kuleuven.ac.be)
  *
  *  --------------------------------------------------------------------------
@@ -15,10 +15,13 @@
 #include <stdio.h>
 #include <sys/types.h>
 
+#ifdef __GLIBC__
+#include <asm/types.h>
+#endif
 
-#define VERSION         "Linux/m68k Frame Buffer Device Configuration " \
-			"Version 1.0 (12/8/96)\n"  \
-			"(C) Copyright 1995 by Geert Uytterhoeven\n"
+#define VERSION         "Linux Frame Buffer Device Configuration " \
+			"Version 2.0-pre (28/10/1998)\n"  \
+			"(C) Copyright 1995-1998 by Geert Uytterhoeven\n"
 
 #define LOW		(0)
 #define HIGH		(1)
@@ -29,30 +32,34 @@
 
 struct VideoMode {
     struct VideoMode *next;
-    char *name;
+    const char *name;
     /* geometry */
-    u_long xres;
-    u_long yres;
-    u_long vxres;
-    u_long vyres;
-    u_long depth;
+    __u32 xres;
+    __u32 yres;
+    __u32 vxres;
+    __u32 vyres;
+    __u32 depth;
+    /* acceleration */
+    __u32 accel_flags;
     /* timings */
-    u_long pixclock;
-    u_long left;
-    u_long right;
-    u_long upper;
-    u_long lower;
-    u_long hslen;
-    u_long vslen;
+    __u32 pixclock;
+    __u32 left;
+    __u32 right;
+    __u32 upper;
+    __u32 lower;
+    __u32 hslen;
+    __u32 vslen;
     /* flags */
-    u_long hsync : 1;
-    u_long vsync : 1;
-    u_long csync : 1;
-    u_long extsync : 1;
-    u_long bcast : 1;
-    u_long laced : 1;
-    u_long dblscan : 1;
+    unsigned hsync : 1;
+    unsigned vsync : 1;
+    unsigned csync : 1;
+    unsigned gsync : 1;
+    unsigned extsync : 1;
+    unsigned bcast : 1;
+    unsigned laced : 1;
+    unsigned dblscan : 1;
     /* scanrates */
+    double drate;
     double hrate;
     double vrate;
 };

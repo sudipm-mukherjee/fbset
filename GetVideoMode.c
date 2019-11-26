@@ -45,6 +45,7 @@ struct VideoMode {
       ULONG hsync    : 1;
       ULONG vsync    : 1;
       ULONG csync    : 1;
+      ULONG gsync    : 1;
       ULONG extsync  : 1;
       ULONG bcast    : 1;
       ULONG laced    : 1;
@@ -91,6 +92,7 @@ void GetVideoMode(ULONG id, BOOL nonameok)
    VideoMode.options.hsync = MonitorInfo.Mspc->BeamCon0 & HSYNCTRUE ? HIGH : LOW;
    VideoMode.options.vsync = MonitorInfo.Mspc->BeamCon0 & VSYNCTRUE ? HIGH : LOW;
    VideoMode.options.csync = MonitorInfo.Mspc->BeamCon0 & CSYNCTRUE ? HIGH : LOW;
+   VideoMode.options.gsync = MonitorInfo.Mspc->BeamCon0 & GSYNCTRUE ? TRUE : FALSE;
    VideoMode.options.extsync = FALSE;
    VideoMode.options.laced = DisplayInfo.PropertyFlags & DIPF_IS_LACE ? TRUE : FALSE;
    VideoMode.options.dblscan = DisplayInfo.PropertyFlags & DIPF_IS_SCANDBL ? TRUE : FALSE;
