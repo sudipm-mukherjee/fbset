@@ -1,3 +1,11 @@
+fbset (2.1-32) unstable; urgency=medium
+
+  * Update Standards-Version to 4.5.0
+  * Fix FTCBFS. (Closes: #851294)
+    - Thanks to Helmut Grohne.
+
+ -- Sudip Mukherjee <sudipm.mukherjee@gmail.com>  Fri, 03 Apr 2020 23:50:03 +0100
+
 fbset (2.1-31) unstable; urgency=low
   * Update Maintainer (Closes: #740580)
   * sync with Linux Kernel v5.4-rc6
