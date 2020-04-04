@@ -28,12 +28,12 @@ build-arch:
 	
 	mkdir -p build-udeb
 	ln -f Makefile build-udeb/Makefile
-	dh_auto_build --builddirectory=build-udeb -- $(DIR_FLAGS) CPPFLAGS="-I.. $(CPPFLAGS)" \
+	dh_auto_build --builddirectory=build-udeb --no-parallel  -- $(DIR_FLAGS) CPPFLAGS="-I.. $(CPPFLAGS)" \
 	  CFLAGS="$(CFLAGS_UDEB)" LDFLAGS="$(LDFLAGS)"
 	
 	mkdir -p build-tree
 	ln -f Makefile build-tree/Makefile
-	dh_auto_build --builddirectory=build-tree -- $(DIR_FLAGS) CPPFLAGS="-I.. $(CPPFLAGS)" \
+	dh_auto_build --builddirectory=build-tree --no-parallel -- $(DIR_FLAGS) CPPFLAGS="-I.. $(CPPFLAGS)" \
 	  CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)"
 
 build: build-indep build-arch
