@@ -1,4 +1,4 @@
-Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Contact: Geert Uytterhoeven <geert@linux-m68k.org>
 Source: http://users.telenet.be/geertu/Linux/fbdev/
 Comment:
