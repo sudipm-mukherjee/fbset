@@ -1,6 +1,8 @@
 fbset (2.1-33) UNRELEASED; urgency=medium
 
   * Use correct machine-readable copyright file URI.
+  * Remove constraints unnecessary since stretch:
+    + fbset: Drop versioned constraint on makedev in Depends.
 
  -- Debian Janitor <janitor@jelmer.uk>  Sat, 25 Apr 2020 06:00:20 +0000
 
