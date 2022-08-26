@@ -1,8 +1,15 @@
-fbset (2.1-33) UNRELEASED; urgency=medium
+fbset (2.1-33) unstable; urgency=medium
 
+  [ Debian Janitor ]
   * Use correct machine-readable copyright file URI.
 
- -- Debian Janitor <janitor@jelmer.uk>  Sat, 25 Apr 2020 06:00:20 +0000
+  [ Sudip Mukherjee ]
+  * Update Standards-Version to 4.6.1.0
+  * Use compatibility level 13.
+  * Sync with Linux Kernel v6.0-rc2.
+  * Disable parallel builds. (Closes: #1017163)
+
+ -- Sudip Mukherjee <sudipm.mukherjee@gmail.com>  Fri, 26 Aug 2022 23:15:01 +0100
 
 fbset (2.1-32) unstable; urgency=medium
 
