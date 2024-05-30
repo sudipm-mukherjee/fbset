@@ -1,3 +1,18 @@
+fbset (2.1-33.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+
+  [ Sven Joachim ]
+  * Move binaries below /usr (Closes: #1061259)
+    The upstream Makefile installs binaries into /bin, in Debian trixie
+    and later they should be installed into /usr/bin instead.  Use the
+    dh_movetousr tool added in debhelper 13.11.7 to achieve that.
+    Adding dh-sequence-movetousr to Build-Depends is not strictly
+    necessary, but it helps with backports and ensures that dh_movetousr
+    is run in case debian/rules gets ever converted to dh.
+
+ -- Chris Hofstaedtler <zeha@debian.org>  Thu, 30 May 2024 16:33:04 +0200
+
 fbset (2.1-33) unstable; urgency=medium
 
   [ Debian Janitor ]

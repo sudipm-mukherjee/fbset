@@ -16,9 +16,6 @@
  *  Brad Midgley <brad@exodus.pht.com>:
  *           -match
  *
- *  David Kozub <zub@linux.fjfi.cvut.cz>:
- *           -sync
- *
  */
 
 
@@ -55,12 +52,6 @@ struct inode;
 
 
     /*
-     *  Mask to zero-out all known sync flags
-     */
-#define FB_CUSTOM_SYNC_MASK ~(FB_SYNC_HOR_HIGH_ACT|FB_SYNC_VERT_HIGH_ACT| \
-    FB_SYNC_COMP_HIGH_ACT|FB_SYNC_ON_GREEN|FB_SYNC_EXT|FB_SYNC_BROADCAST)
-
-    /*
      *  Command Line Options
      */
 
@@ -95,7 +86,6 @@ static const char *Opt_vsync = NULL;
 static const char *Opt_csync = NULL;
 static const char *Opt_gsync = NULL;
 static const char *Opt_extsync = NULL;
-static const char *Opt_sync = NULL;
 static const char *Opt_bcast = NULL;
 static const char *Opt_laced = NULL;
 static const char *Opt_double = NULL;
@@ -133,7 +123,6 @@ static struct {
     { "-csync", &Opt_csync, 1 },
     { "-gsync", &Opt_gsync, 1 },
     { "-extsync", &Opt_extsync, 1 },
-    { "-sync", &Opt_sync, 1 },
     { "-bcast", &Opt_bcast, 1 },
     { "-laced", &Opt_laced, 1 },
     { "-double", &Opt_double, 1 },
@@ -210,60 +199,6 @@ static struct accelentry {
     { FB_ACCEL_SUN_CGTHREE, "Sun cg3" },
     { FB_ACCEL_SUN_TCX, "Sun tcx" },
     { FB_ACCEL_MATROX_MGAG400, "Matrox G400" },
-    { FB_ACCEL_NV3, "nVidia RIVA 128" },
-    { FB_ACCEL_NV4, "nVidia RIVA TNT" },
-    { FB_ACCEL_NV5, "nVidia RIVA TNT2" },
-    { FB_ACCEL_CT_6555x, "C&T 6555x" },
-    { FB_ACCEL_3DFX_BANSHEE, "3Dfx Banshee" },
-    { FB_ACCEL_ATI_RAGE128, "ATI Rage128 family" },
-    { FB_ACCEL_ATI_RADEON, "ATI Radeon family" },
-    { FB_ACCEL_IGS_CYBER2000, "CyberPro 2000" },
-    { FB_ACCEL_IGS_CYBER2010, "CyberPro 2010" },
-    { FB_ACCEL_IGS_CYBER5000, "CyberPro 5000" },
-    { FB_ACCEL_SIS_GLAMOUR, "SiS 300/630/540" },
-    { FB_ACCEL_SIS_GLAMOUR_2, "SiS 315/650/740" },
-    { FB_ACCEL_SIS_XABRE, "SiS 330 (Xabre)" },
-    { FB_ACCEL_3DLABS_PERMEDIA3, "3Dlabs Permedia 3" },
-    { FB_ACCEL_I810, "Intel 810/815" },
-    { FB_ACCEL_I830, "Intel 830M/845G/85x/865G" },
-    { FB_ACCEL_NEOMAGIC_NM2070, "NeoMagic NM2070" },
-    { FB_ACCEL_NEOMAGIC_NM2090, "NeoMagic NM2090" },
-    { FB_ACCEL_NEOMAGIC_NM2093, "NeoMagic NM2093" },
-    { FB_ACCEL_NEOMAGIC_NM2097, "NeoMagic NM2097" },
-    { FB_ACCEL_NEOMAGIC_NM2160, "NeoMagic NM2160" },
-    { FB_ACCEL_NEOMAGIC_NM2200, "NeoMagic NM2200" },
-    { FB_ACCEL_NEOMAGIC_NM2230, "NeoMagic NM2230" },
-    { FB_ACCEL_NEOMAGIC_NM2360, "NeoMagic NM2360" },
-    { FB_ACCEL_NEOMAGIC_NM2380, "NeoMagic NM2380" },
-    { FB_ACCEL_PXA3XX, "PXA3xx" },
-    { FB_ACCEL_SAVAGE4, "S3 Savage4" },
-    { FB_ACCEL_SAVAGE3D, "S3 Savage3D" },
-    { FB_ACCEL_SAVAGE3D_MV, "S3 Savage3D-MV" },
-    { FB_ACCEL_SAVAGE2000, "S3 Savage2000" },
-    { FB_ACCEL_SAVAGE_MX_MV, "S3 Savage/MX-MV" },
-    { FB_ACCEL_SAVAGE_MX, "S3 Savage/MX" },
-    { FB_ACCEL_SAVAGE_IX_MV, "S3 Savage/IX-MV" },
-    { FB_ACCEL_SAVAGE_IX, "S3 Savage/IX" },
-    { FB_ACCEL_PROSAVAGE_PM, "S3 ProSavage PM133" },
-    { FB_ACCEL_PROSAVAGE_KM, "S3 ProSavage KM133" },
-    { FB_ACCEL_S3TWISTER_P, "S3 Twister" },
-    { FB_ACCEL_S3TWISTER_K, "S3 TwisterK" },
-    { FB_ACCEL_SUPERSAVAGE, "S3 Supersavage" },
-    { FB_ACCEL_PROSAVAGE_DDR, "S3 ProSavage DDR" },
-    { FB_ACCEL_PROSAVAGE_DDRK, "S3 ProSavage DDR-K" },
-    { FB_ACCEL_PUV3_UNIGFX, "PKUnity-v3 Unigfx" },
-    { FB_ACCEL_NV_10, "nVidia Arch 10" },
-    { FB_ACCEL_NV_20, "nVidia Arch 20" },
-    { FB_ACCEL_NV_30, "nVidia Arch 30" },
-    { FB_ACCEL_NV_40, "nVidia Arch 40" },
-    { FB_ACCEL_XGI_VOLARI_V, "XGI Volari V3XT, V5, V8" },
-    { FB_ACCEL_XGI_VOLARI_Z, "XGI Volari Z7" },
-    { FB_ACCEL_OMAP1610, "TI OMAP16xx" },
-    { FB_ACCEL_TRIDENT_TGUI, "Trident TGUI" },
-    { FB_ACCEL_TRIDENT_3DIMAGE, "Trident 3DImage" },
-    { FB_ACCEL_TRIDENT_BLADE3D, "Trident Blade3D" },
-    { FB_ACCEL_TRIDENT_BLADEXP, "Trident BladeXP" },
-    { FB_ACCEL_CIRRUS_ALPINE, "Cirrus Logic 543x/544x/5480" },
 };
 
 
@@ -413,7 +348,6 @@ static void ConvertFromVideoMode(const struct VideoMode *vmode,
 	var->sync |= FB_SYNC_EXT;
     if (vmode->bcast == TRUE)
 	var->sync |= FB_SYNC_BROADCAST;
-    var->sync |= vmode->sync;
     if (vmode->laced == TRUE)
 	var->vmode = FB_VMODE_INTERLACED;
     else if (vmode->dblscan == TRUE)
@@ -457,7 +391,6 @@ static void ConvertToVideoMode(const struct fb_var_screeninfo *var,
     vmode->gsync = var->sync & FB_SYNC_ON_GREEN ? TRUE : FALSE;
     vmode->extsync = var->sync & FB_SYNC_EXT ? TRUE : FALSE;
     vmode->bcast = var->sync & FB_SYNC_BROADCAST ? TRUE : FALSE;
-    vmode->sync = var->sync & FB_CUSTOM_SYNC_MASK;
     vmode->grayscale = var->grayscale;
     vmode->laced = FALSE;
     vmode->dblscan = FALSE;
@@ -567,27 +500,6 @@ void makeRGBA(struct VideoMode *vmode, const char* opt)
 }
 
     /*
-     *  Take known bits from sync and set appropriate flags instead
-     */
-
-void fixCustomSync(struct VideoMode *vmode)
-{
-    if (vmode->sync & FB_SYNC_HOR_HIGH_ACT)
-	vmode->hsync = 1;
-    if (vmode->sync & FB_SYNC_VERT_HIGH_ACT)
-	vmode->vsync = 1;
-    if (vmode->sync & FB_SYNC_COMP_HIGH_ACT)
-	vmode->csync = 1;
-    if (vmode->sync & FB_SYNC_ON_GREEN)
-	vmode->gsync = 1;
-    if (vmode->sync & FB_SYNC_EXT)
-	vmode->extsync =1;
-    if (vmode->sync & FB_SYNC_BROADCAST)
-	vmode->bcast = 1;
-    vmode->sync &= FB_CUSTOM_SYNC_MASK;
-}
-
-    /*
      *  Find a Video Mode
      */
 
@@ -651,12 +563,6 @@ static void ModifyVideoMode(struct VideoMode *vmode)
 	vmode->extsync = atoboolean(Opt_extsync);
     if (Opt_bcast)
 	vmode->bcast = atoboolean(Opt_bcast);
-    if (Opt_sync)
-    {
-	vmode->sync = strtoul(Opt_sync, NULL, 0);
-	// call this only once all the other sync fields are determined!
-	fixCustomSync(vmode);
-    }
     if (Opt_laced)
 	vmode->laced = atoboolean(Opt_laced);
     if (Opt_double)
@@ -733,8 +639,6 @@ static void DisplayVModeInfo(struct VideoMode *vmode)
 	    puts("    extsync true");
 	if (vmode->bcast)
 	    puts("    bcast true");
-	if (vmode->sync)
-	    printf("    sync 0x%x\n", vmode->sync);
 	if (vmode->laced)
 	    puts("    laced true");
 	if (vmode->dblscan)
@@ -787,8 +691,6 @@ static void DisplayVModeInfo(struct VideoMode *vmode)
 	    puts("    # Warning: XFree86 doesn't support extsync\n");
 	if (vmode->bcast)
 	    printf(" \"bcast\"");
-	if (vmode->sync)
-	    puts("    # Warning: XFree86 doesn't support custom sync values\n");
 	if (vmode->accel_flags)
 	    puts("    # Warning: XFree86 doesn't support accel\n");
 	if (vmode->grayscale)
@@ -808,7 +710,7 @@ static void DisplayFBInfo(struct fb_fix_screeninfo *fix)
 
     puts("Frame buffer device information:");
     printf("    Name        : %s\n", fix->id);
-    printf("    Address     : %#0lx\n", fix->smem_start);
+    printf("    Address     : %p\n", fix->smem_start);
     printf("    Size        : %d\n", fix->smem_len);
     printf("    Type        : ");
     switch (fix->type) {
@@ -878,7 +780,7 @@ static void DisplayFBInfo(struct fb_fix_screeninfo *fix)
     printf("    YWrapStep   : %d\n", fix->ywrapstep);
     printf("    LineLength  : %d\n", fix->line_length);
     if (fix->mmio_len) {
-	printf("    MMIO Address: %#0lx\n", fix->mmio_start);
+	printf("    MMIO Address: %p\n", fix->mmio_start);
 	printf("    MMIO Size   : %d\n", fix->mmio_len);
     }
     printf("    Accelerator : ");
@@ -930,8 +832,7 @@ static int FillScanRates(struct VideoMode *vmode)
 static void Usage(void)
 {
     puts(VERSION);
-    printf(
-	"\nUsage: %s [options] [mode]\n\n"
+    Die("\nUsage: %s [options] [mode]\n\n"
 	"Valid options:\n"
 	"  General options:\n"
 	"    -h, --help         : display this usage information\n"
@@ -975,7 +876,6 @@ static void Usage(void)
 	"    -csync <value>     : composite sync polarity (low or high)\n"
 	"    -gsync <value>     : synch on green (false or true)\n"
 	"    -extsync <value>   : external sync enable (false or true)\n"
-	"    -sync <value>      : custom (driver specific) sync value\n"
 	"    -bcast <value>     : broadcast enable (false or true)\n"
 	"    -laced <value>     : interlace enable (false or true)\n"
 	"    -double <value>    : doublescan enable (false or true)\n"
@@ -987,7 +887,6 @@ static void Usage(void)
 	"    -step <value>      : step increment (in pixels or pixel lines)\n"
 	"                         (default is 8 horizontal, 2 vertical)\n",
 	ProgramName);
-	exit(0);
 }
 
 
