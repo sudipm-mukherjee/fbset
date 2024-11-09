@@ -1,2 +1,2 @@
 version=4
-http://users.telenet.be/geertu/Linux/fbdev/ fbset-(.*)\.tar\.gz debian uupdate
+http://g33rt.be/migrated/Linux/fbdev/ fbset-(.*)\.tar\.gz debian uupdate
